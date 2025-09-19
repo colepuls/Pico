@@ -1,8 +1,6 @@
-# Pico - Desktop Robot (Replacement for my Amazon Echo Dot)
+# Pico - Desktop Robot
 
----
-
-## Requirements descriptions
+## Requirements description
 - **openwakeword**: Listens continuosly for a wake phrase "Pico"
 - **faster-whisper**: Speech-To-Text
 - **piper-tts**: Text-To-Speech
