@@ -1,4 +1,4 @@
-# Pico - Desktop Robot
+# Pico - Desktop Robot Assistant
 
 ## Requirements description
 - **openwakeword**: Listens continuosly for a wake phrase "Pico"
