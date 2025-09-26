@@ -10,8 +10,8 @@ MAX_UTTERANCE_SEC = 12
 VAD_AGGR = 2
 
 # -------- Wake / Engage --------
-WAKE_PHRASES = ("pico", "hey pico", "ok pico")
-SLEEP_PHRASES = ("go to sleep", "stop listening", "thanks pico", "goodbye pico", "sleep", "stop", "exit", "shut up")
+WAKE_PHRASES = ("pico", "hey pico", "ok pico", "wake up", "wake", "yo")
+SLEEP_PHRASES = ("go to sleep", "stop listening", "goodbye pico", "sleep", "stop", "exit", "shut up", "see ya", "see ya bro")
 
 # -------- LLM --------
 MODEL_PATH = "/home/colecodes/projects/Pico/llm/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"

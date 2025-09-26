@@ -22,7 +22,7 @@ def run():
 
     llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=os.cpu_count(),
                 n_batch=128, use_mlock=False, embedding=False, verbose=False, chat_format="chatml")
-    print("Say Pico")
+    print("Wake Pico\n------------")
 
     stt = WhisperModel(args.stt_model, device="cpu", compute_type=args.compute_type)
 
@@ -44,7 +44,7 @@ def run():
                     if first_query:
                         print(f"\n-> {first_query}")
                         if is_sleep_cmd(first_query):
-                            print("Okay, going back to wake mode."); mode = "wake"; continue
+                            print("Sleeping"); mode = "wake"; continue
                         if is_greeting(first_query):
                             reply = "Hello, I'm Pico."; print(reply + "\n"); say(reply, device=args.tts_out); continue
                         if is_who(first_query):
@@ -66,7 +66,8 @@ def run():
             if not text: continue
             print(f"\n-> {text}")
             if is_sleep_cmd(text):
-                print("Okay, going back to wake mode."); mode = "wake"; continue
+                chime()
+                print("Sleeping"); mode = "wake"; continue
             if is_greeting(text):
                 reply = "Hello, I'm Pico."; print(reply + "\n"); say(reply, device=args.tts_out); continue
             if is_who(text):
@@ -86,8 +87,8 @@ def run():
             if full_reply: say(full_reply, device=args.tts_out)
 
         except KeyboardInterrupt:
-            print("\nBye.")
-            try: say("Goodbye.", device=args.tts_out)
+            print("\nSee ya bro.")
+            try: say("See ya bro.", device=args.tts_out)
             except Exception: pass
             break
         except Exception as e:
