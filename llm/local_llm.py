@@ -34,7 +34,7 @@ while True:
     ]
     for token in llm.create_chat_completion(
         messages=messages,
-        max_tokens = 220,
+        max_tokens = 320,
         temperature = 0.6,
         top_p = 0.9,
         stream=True
