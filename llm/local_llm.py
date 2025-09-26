@@ -16,6 +16,10 @@ llm = Llama(
     verbose=False # prevent info overload
 )
 
+pico_instructions = (
+    "You are a helpful assistant. Be short and concise."
+)
+
 print("Ask Pico")
 
 while True:
@@ -24,7 +28,10 @@ while True:
     except KeyboardInterrupt: # ctrl c to exit
         sys.exit(0)
 
-    messages = [{"role": "system", "content":"You are a concise, helpful assistant."}, {"role": "user", "content": user}]
+    messages = [
+        {"role": "system", "content": pico_instructions}, 
+        {"role": "user", "content": user}
+    ]
     for token in llm.create_chat_completion(
         messages=messages,
         max_tokens = 220,
