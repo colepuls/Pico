@@ -1,5 +1,4 @@
 /.cache
 /llm/models
 *.gguf/.cache
-/llm/models
 *.gguf
