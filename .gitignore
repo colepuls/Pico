@@ -1,4 +1,2 @@
-/.cache
-/llm/models
-*.gguf/.cache
-*.gguf
+/apis/__pycache__
+__pycache__

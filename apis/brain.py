@@ -1,9 +1,12 @@
 from openai import OpenAI
+from apis import stt
+
 client = OpenAI()
+prompt = stt.txt
 
 response = client.responses.create(
     model="gpt-4o-mini",
-    input="Whats the weather right now in Columbia, MO"
+    input = prompt
 )
 
-print(response.output_text)
+out = response.output_text
