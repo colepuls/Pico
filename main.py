@@ -1,7 +1,11 @@
 import pico
+import skills.get_weather as gw
 
 def main():
     sleep_phrases = ["sleep", "go to sleep", "bye pico"]
+    weather_phrases = ["weather", "forecast", "temperature"]
+    say_weather = False
+    weeather_text = ""
 
     while True:
         if pico.awake == False:
@@ -16,8 +20,13 @@ def main():
                 pico.beep()
                 pico.awake = False
                 continue
-            
-            # Get model response
+            if any(phrase in text.lower() for phrase in weather_phrases):
+                weather_text = gw.get_weather(lat=38.95, lon=-92.33)
+                pico_audio = pico.text_to_speech(weather_text)
+                pico.run(text, weather_text, pico_audio)
+                continue
+
+            # Get response
             model_output = pico.get_response(text)
 
             # Covert to speech

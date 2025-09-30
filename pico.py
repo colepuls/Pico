@@ -57,7 +57,7 @@ def speech_to_text():
     print("Ask Pico\n")
     sr = 16000 # sample rate
     max_secs = 15
-    silence_len = 1.0 # stop listening after 5 seconds of silence
+    silence_len = 1.0 # stop listening after 1 second of silence
 
     block = int(sr * 0.25)  # check every 0.25s
     frames = []
