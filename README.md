@@ -1,18 +1,13 @@
 # Pico - Desktop Robot Assistant
 
-## Requirements description
-- **openwakeword**: Listens continuosly for a wake phrase "Pico"
-- **faster-whisper**: Speech-To-Text
-- **piper-tts**: Text-To-Speech
-- **mediapipe**: Face detection
-- **apscheduler**: Manages alarms, timers, and scheduled tasks
-- **nltk**: Access to offline dictionary
-- **pigpio**: Controls servos
-- **python-dotenv**: Loads API keys and config
-- **requests**: Makes requests to call APIs
-- **pendulum**: Library for date and time
-- **spotipy**: Client for Spotify Web API
-- **llama-cpp-python**: Local llm
+## Features:
+- Wake word: Say hey Pico to wake bot up
+- Conversation using mic and speaker with AI
+- Get weather
+- Set alarms
+- Face detection: Recognize on say hi to different people when they walk in the room
+- 360 degree motion: Move around, tack and move with people as they move around the room
+- Visual display: Displaty time, talking animations, weather
 
 ---
 
