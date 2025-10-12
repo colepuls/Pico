@@ -10,7 +10,7 @@
 - Visual display: Displaty time, talking animations, weather
 
 ## Requirements:
-- Local llm: Ollama phi3:mini model
+- Local llm: small ollama model
 - Mic & Speaker access: sounddevice
 - STT: faster-whisper
 - TTS: piper
