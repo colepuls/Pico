@@ -5,9 +5,15 @@
 - Conversation using mic and speaker with AI
 - Get weather
 - Set alarms
-- Face detection: Recognize on say hi to different people when they walk in the room
+- Face detection: Recognize and say hi to different people when they walk in the room
 - 360 degree motion: Move around, tack and move with people as they move around the room
 - Visual display: Displaty time, talking animations, weather
+
+## Requirements:
+- Local llm: Ollama phi3:mini model
+- Mic & Speaker access: sounddevice
+- STT: faster-whisper
+- TTS: piper
 
 ---
 
