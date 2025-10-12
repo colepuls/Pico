@@ -1,3 +1,3 @@
 .env
-./__pycahce__
-./local_llm/__pycahce__
+__pycache__/
+local_llm/__pycache__/
