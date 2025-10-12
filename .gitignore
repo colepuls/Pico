@@ -1,3 +1,4 @@
 .env
 __pycache__/
 local_llm/__pycache__/
+skills/__pycache__/
