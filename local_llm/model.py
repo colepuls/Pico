@@ -21,25 +21,35 @@ def load_memory():
 
 def save_memory(memory):
     with open(MEMORY_FILE, "w") as f:
-        json.dump(memory[-10:], f) # keep last 10 chats
-
+        json.dump(memory[-4:], f) # keep last 10 messages, not counting the system prompt
 
 def model(user_input):
     PERSONALITY = "You are Pico, a kind, goofy chatbot that gives clear and concise answers. Keep a conversational tone and remember the past chats naturally."
 
     MODEL = "qwen2.5:0.5b"
 
-    memory = [{'role': 'system', 'content': PERSONALITY}]
-    memory += load_memory()
-    memory.append({'role': 'user', 'content': user_input})
+    memory = load_memory()
+
+    system_message = {'role': 'system', 'content': PERSONALITY}
+    user_message = {'role': 'user', 'content': user_input}
+
+    messages = [
+        system_message,
+        *memory,
+        user_message
+    ]
 
     response = ""
-    for word in ollama.chat(model=MODEL, messages=memory, stream=True):
+    for word in ollama.chat(model=MODEL, messages=messages, stream=True):
         content = word["message"]["content"]   
         print(content, end="", flush=True)
         response += content
+    print("\n")
 
-    memory.append({'role': 'assistant', 'content': response})
+    response_message = {'role': 'assistant', 'content': response}
+
+    memory.append(user_message)
+    memory.append(response_message)
     save_memory(memory)
 
     return response

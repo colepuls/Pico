@@ -48,5 +48,3 @@ def main():
             continue
 
         response = model(user_input) # get response to user input from ollama model
-        
-        print(response + "\n")
