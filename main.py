@@ -49,9 +49,4 @@ def main():
 
         response = model(user_input) # get response to user input from ollama model
         
-        # print response word by word
-        for word in response:
-            word = word['message']['content']
-            print(word, end='', flush=True)
-    
-        print("\n")
+        print(response + "\n")
