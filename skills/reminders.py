@@ -1,20 +1,17 @@
 from datetime import datetime
 import time
 import threading
+import sys, fcntl, termios # for auto \n
 
 def reminder(scheduled_time, message):
     while datetime.now() < scheduled_time:
-        time.sleep(10)
-    print(f"\n[Reminder] {message}\n")
+        time.sleep(5)
+    # print(f"\n[Reminder] {message}\n")
+    fcntl.ioctl(sys.stdin.fileno(), termios.TIOCSTI, '\n') # automatically press enter after execution to go back to chatbot
+
 
 def set_reminder(year, month, day, hour, minute, message):
     scheduled_time = datetime(year, month, day, hour, minute)
-    thread = threading.Thread(target=reminder, args=(scheduled_time, message)) # run reminder in background 
-    daemon = True
+    thread = threading.Thread(target=reminder, args=(scheduled_time, message), daemon=True) # run reminder in background 
     thread.start()
-    print(f"Reminder set for {scheduled_time.strftime('%Y-%m-%d %H:%M')}")
-
-#def main():
-#    t = set_reminder(2025, 10, 13, 22, 3, "Baka")
-#    print("Main running...\n")
-#    t.join()
+    print(f"Reminder set for {scheduled_time.strftime('%Y-%m-%d %H:%M')}\n")

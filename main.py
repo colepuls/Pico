@@ -15,7 +15,6 @@ def typewriter(text, delay):
         time.sleep(delay)
     print("\n")
 
-
 def main():
     awake = True
 
@@ -57,6 +56,9 @@ def main():
             minute = int(input("Minute: "))
             reminder_message = input("Message: ")
             set_reminder(year, month, day, hour, minute, reminder_message)
+            continue
+        if user_input.strip() == "":
+            typewriter(f"[Reminder] {reminder_message}", 0.03)
             continue
 
 
