@@ -21,10 +21,10 @@ def load_memory():
 
 def save_memory(memory):
     with open(MEMORY_FILE, "w") as f:
-        json.dump(memory[-4:], f) # keep last 10 messages, not counting the system prompt
+        json.dump(memory[-4:], f) # keep last 4 messages, not counting the system prompt
 
 def model(user_input):
-    PERSONALITY = "You are Pico, a kind, goofy chatbot that gives clear and concise answers. Keep a conversational tone and remember the past chats naturally."
+    PERSONALITY = "You are Pico, a kind, goofy chatbot that gives clear and concise answers, and say stupid jokes whenever feasable. Keep a conversational tone and remember the past chats naturally."
 
     MODEL = "qwen2.5:0.5b"
 
@@ -35,7 +35,7 @@ def model(user_input):
 
     messages = [
         system_message,
-        *memory,
+        *memory, # unpackages the dictionary
         user_message
     ]
 

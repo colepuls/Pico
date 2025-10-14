@@ -4,6 +4,7 @@ from skills.vision import take_picture as take_picture
 from skills.motion import servo
 from skills.motion import run_motor as run_motor
 from skills.motion import stop_motor as stop_motor
+from skills.reminders import set_reminder as set_reminder
 import time
 import sys
 
@@ -23,6 +24,7 @@ def main():
     picture_phrase = "photo"
     motor_start_phrase = "start motor"
     motor_stop_phrase = "stop motor"
+    set_remider_phrase = "reminder"
 
     while awake:
         user_input = input("-> ") # get user input
@@ -46,5 +48,16 @@ def main():
             stop_motor()
             typewriter("Motor stopped.", 0.03)
             continue
+        if set_remider_phrase in user_input.lower():
+            typewriter("Set reminder", 0.03)
+            year = int(input("Year: "))
+            month = int(input("Month: "))
+            day = int(input("Day: "))
+            hour = int(input("Hour: "))
+            minute = int(input("Minute: "))
+            reminder_message = input("Message: ")
+            set_reminder(year, month, day, hour, minute, reminder_message)
+            continue
+
 
         response = model(user_input) # get response to user input from ollama model
