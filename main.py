@@ -5,6 +5,7 @@ from skills.motion import servo
 from skills.motion import run_motor as run_motor
 from skills.motion import stop_motor as stop_motor
 from skills.reminders import set_reminder as set_reminder
+from skills.text_to_speech import speak as speak
 import time
 import sys
 
@@ -33,6 +34,7 @@ def main():
         if weather_phrase in user_input.lower():
             temperature = get_weather(38.95, -92.33) # get columbia mo current temp
             typewriter(f"The temperature is {temperature} degrees farenheit.", 0.03)
+            speak(f"The temperature is {temperature} degrees farenheit.")
             continue
         if picture_phrase in user_input.lower():
             typewriter("Taking photo...", 0.03)
@@ -59,7 +61,9 @@ def main():
             continue
         if user_input.strip() == "":
             typewriter(f"[Reminder] {reminder_message}", 0.03)
+            speak(reminder_message)
             continue
 
 
         response = model(user_input) # get response to user input from ollama model
+        speak(response)

@@ -35,7 +35,7 @@ def model(user_input):
 
     messages = [
         system_message,
-        *memory, # unpackages the dictionary
+        *memory, # unpackages the dictionary.
         user_message
     ]
 

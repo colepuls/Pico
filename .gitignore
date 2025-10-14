@@ -6,3 +6,6 @@ skills/__pycache__/
 skills/.lgd-nfy0
 /images
 /local_llm/memory.json
+/piper-voices
+/skills/sound.wav
+sound.wav
