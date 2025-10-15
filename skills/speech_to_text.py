@@ -13,8 +13,6 @@ def record_audio():
     silence_time_tracker = 0 # silence time tracker
     audio = [] # stores all recorded chunks
 
-    print("Start talking...")
-
     # open microphone stream
     with sd.InputStream(samplerate=samplerate, channels=1) as stream:
         while True:
@@ -47,11 +45,3 @@ def translate_audio_to_text():
         )
 
     return transcript
-
-def main():
-    record_audio()
-    text = translate_audio_to_text()
-    speak(text)
-
-if __name__ == '__main__':
-    main()

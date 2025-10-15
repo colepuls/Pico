@@ -6,7 +6,6 @@ import sys, fcntl, termios # for auto \n
 def reminder(scheduled_time, message):
     while datetime.now() < scheduled_time:
         time.sleep(5)
-    # print(f"\n[Reminder] {message}\n")
     fcntl.ioctl(sys.stdin.fileno(), termios.TIOCSTI, '\n') # automatically press enter after execution to go back to chatbot
 
 
