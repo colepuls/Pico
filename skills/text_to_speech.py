@@ -1,5 +1,6 @@
 import sounddevice as sd
 import soundfile as sf
+import numpy as np
 import wave
 from piper import PiperVoice
 
@@ -11,5 +12,10 @@ def speak(text):
 
     # play sound file through speaker
     data, samplerate = sf.read("sound.wav", dtype='float32')
+
+    # tweak speaker volume
+    volume = 4
+    data = np.clip(data * volume, -1.0, 1.0) # stabalize
+    
     sd.play(data, samplerate)
     sd.wait()  # wait for audio to finish

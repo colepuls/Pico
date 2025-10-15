@@ -6,6 +6,8 @@ from skills.motion import run_motor as run_motor
 from skills.motion import stop_motor as stop_motor
 from skills.reminders import set_reminder as set_reminder
 from skills.text_to_speech import speak as speak
+from skills.speech_to_text import record_audio as record_audio
+from skills.speech_to_text import translate_audio_to_text as translate_audio_to_text
 import time
 import sys
 
@@ -27,8 +29,10 @@ def main():
     set_remider_phrase = "reminder"
 
     while awake:
-        user_input = input("-> ") # get user input
-        print()
+        #user_input = input("-> ") # get user input
+        #print()
+        record_audio()
+        user_input = translate_audio_to_text()
 
         # skill pulls
         if weather_phrase in user_input.lower():
@@ -64,6 +68,7 @@ def main():
             speak(reminder_message)
             continue
 
-
-        response = model(user_input) # get response to user input from ollama model
+        #response = model(user_input) # get response to user input from ollama model
+        #speak(response)
+        response = model(user_input)
         speak(response)
