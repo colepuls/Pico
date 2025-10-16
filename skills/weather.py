@@ -1,6 +1,7 @@
 import requests
 
-def get_weather(lat, lon): # columbia mo coordinates
+# Get's cities current temperature
+def get_weather(lat, lon):
     url = "https://api.open-meteo.com/v1/forecast"
     # search url using requests
     response = requests.get(url, params={
@@ -8,9 +9,12 @@ def get_weather(lat, lon): # columbia mo coordinates
         "longitude": lon,
         "current_weather": True
     })
-    data = response.json()["current_weather"] # extract current weather data from json
+    # extract current weather data from json
+    data = response.json()["current_weather"]
 
-    temperature = data["temperature"] # get temperature
-    temperature = int(temperature * 9/5 + 32) # convert to farenheit
+    # get temperature
+    temperature = data["temperature"]
+    # convert to farenheit
+    temperature = int(temperature * 9/5 + 32)
 
     return temperature

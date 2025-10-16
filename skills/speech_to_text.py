@@ -5,6 +5,7 @@ import sounddevice as sd
 import soundfile as sf
 import numpy as np
 
+# ----- Get user audio -----
 def record_audio():
     samplerate = 16000 # audio-samples/second, represents soundwaves
     threshold = 0.3 # how quiet the sound needs to be to count as 'silence'
@@ -27,9 +28,9 @@ def record_audio():
                 silence = 0
         
     data = np.concatenate(audio, axis=0) # combine all audio chunks
-    sf.write("audio.wav", data, samplerate)
+    sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
 
-
+# ----- Translate audio to text -----
 def translate_audio_to_text():
     load_dotenv()
 
@@ -37,7 +38,7 @@ def translate_audio_to_text():
 
     client = OpenAI(api_key=OPENAI_API_KEY)
 
-    with open("audio.wav", "rb") as f:
+    with open("/home/colecodes/projects/Pico/audio_files/audio.wav", "rb") as f:
         transcript = client.audio.transcriptions.create(
             model="gpt-4o-transcribe",
             file=f,

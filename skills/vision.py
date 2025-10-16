@@ -1,8 +1,9 @@
 from picamera2 import Picamera2
 from time import sleep
 
+# ----- Code for testing camera -----
 def take_picture(path):
-    # initialize camera
+    # Initialize camera
     try:
         cam = Picamera2()
         cam.configure(cam.create_still_configuration())
