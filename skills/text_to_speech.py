@@ -15,7 +15,7 @@ def speak(text):
     data, samplerate = sf.read("/home/colecodes/projects/Pico/audio_files/sound.wav", dtype='float32')
 
     # tweak speaker volume
-    volume = 4
+    volume = 7
     # stabalize
     data = np.clip(data * volume, -1.0, 1.0)
     
