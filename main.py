@@ -1,6 +1,6 @@
 from local_llm.model import model as model
 from skills.weather import get_weather
-from skills.vision import take_picture
+from skills.photo import take_picture
 from skills.reminders import set_reminder
 from skills.text_to_speech import speak
 from skills.speech_to_text import record_audio
