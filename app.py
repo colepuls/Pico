@@ -1,5 +1,5 @@
 from main import main
-from skills.video_server import run_server
+from server import run_server
 import threading as thr
 
 if __name__ == "__main__":
