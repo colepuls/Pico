@@ -6,6 +6,7 @@ from skills.text_to_speech import speak
 from skills.speech_to_text import record_audio
 from skills.speech_to_text import translate_audio_to_text
 from skills.get_current_time import get_time
+from skills.wakeword.wakeword_runtime import prob_from_np
 import time
 import sys
 
@@ -31,9 +32,9 @@ def main():
         # wake up pico
         print("---- Wake up Pico ----\n")
         while True:
-            record_audio()
-            input = translate_audio_to_text()
-            if any(phrase in input.lower() for phrase in wake_phrases):
+            data, sr = record_audio(stime=0.2)
+            p = prob_from_np(data, sr)
+            if p > 0.45:
                 awake = True
                 break
 
@@ -41,7 +42,7 @@ def main():
         while awake:
             # get user_input
             print("---- Talk to Pico ----\n")
-            record_audio()
+            record_audio(stime=2.0)
             user_input = translate_audio_to_text()
             print("User: ", end="")
             typewriter(user_input, 0.03)
@@ -51,19 +52,24 @@ def main():
                 temperature = get_weather(38.95, -92.33) # Columbia, MO
                 typewriter(f"The temperature is {temperature} degrees farenheit.", 0.03)
                 speak(f"The temperature is {temperature} degrees farenheit.")
-                continue
+                awake = False
+                break
             if current_time_phrase in user_input.lower():
                 current_time = get_time()
                 typewriter(f"The time is {current_time}", 0.03)
                 speak(f"The time is {current_time}")
-                continue
+                awake = False
+                break
             if picture_phrase in user_input.lower():
                 typewriter("Taking photo...", 0.03)
                 take_picture("./images/photo.jpg")
                 typewriter("Photo taken.", 0.03)
-                continue
+                awake = False
+                break
 
             # get model output
             print("Pico: ", end="")
             response = model(user_input)
             speak(response)
+            awake = False
+            break

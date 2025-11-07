@@ -6,10 +6,10 @@ import soundfile as sf
 import numpy as np
 
 # ----- Get user audio -----
-def record_audio():
+def record_audio(stime):
     samplerate = 16000 # audio-samples/second, represents soundwaves
     threshold = 0.3 # how quiet the sound needs to be to count as 'silence'
-    silence_time = 2 # how long in seconds silence must lasts before stopping
+    silence_time = stime # how long in seconds silence must lasts before stopping
     block_size = 1024 # grab 1024 audio-samples at a time
     silence_time_tracker = 0 # silence time tracker
     audio = [] # stores all recorded chunks
@@ -29,6 +29,7 @@ def record_audio():
         
     data = np.concatenate(audio, axis=0) # combine all audio chunks
     sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
+    return data, samplerate
 
 # ----- Translate audio to text -----
 def translate_audio_to_text():
