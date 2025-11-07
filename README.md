@@ -9,7 +9,13 @@ It listens for a wakeword "Pico" to wakeup, processes speech, generates response
 
 <p align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="60" />
-  <img src="https://pytorch.org/assets/images/pytorch-logo.png" width="90" />
+  <img src="https://pytorch.org/assets/images/pytorch-logo.png" width="60" />
+  <img src="https://logos-world.net/wp-content/uploads/2024/10/OpenAI-Logo.png" width="60" />
+  <img src="gh_assets/flask.png" width="60" />
+  <img src="gh_assets/ollama.png" width="60" />
+  <img src="gh_assets/piper.png" width="60" />
+  <img src="gh_assets/rasp.png" width="60" />
+  <img src="gh_assets/gpiozero.png" width="60" />
 </p>
 
 **Core Technologies**
@@ -40,6 +46,7 @@ Repository to wakeword model: https://github.com/colepuls/wakeword
 - [ ] Implement facedetection
 - [ ] Add visual display
 - [ ] Update motion control
+- [ ] Update webserver
 - [ ] Some other things ...
 - [ ] 3d print chasis and put it all together
 
