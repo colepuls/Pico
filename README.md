@@ -9,12 +9,12 @@ It listens for a wakeword "Pico" to wakeup, processes speech, generates response
 
 <p align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="60" />
-  <img src="https://pytorch.org/assets/images/pytorch-logo.png" width="60" />
-  <img src="gh_assets/flask.png" width="60" valign="middle" />
-  <img src="gh_assets/openai.png" width="80" valign="middle" />
-  <img src="gh_assets/ollama.png" width="60" valign="middle" />
-  <img src="gh_assets/piper.png" width="80" valign="middle" />
-  <img src="gh_assets/rasp.png" width="60" valign="middle" />
+  <img src="https://pytorch.org/assets/images/pytorch-logo.png" width="70" />
+  <img src="gh_assets/flask.png" width="60"/>
+  <img src="gh_assets/openai.png" width="90"/>
+  <img src="gh_assets/ollama.png" width="60"/>
+  <img src="gh_assets/piper.png" width="90"/>
+  <img src="gh_assets/rasp.png" width="60"/>
 </p>
 
 **Core Technologies**
@@ -31,7 +31,7 @@ It listens for a wakeword "Pico" to wakeup, processes speech, generates response
 
 ## Overview
 
-Pico combines **embedded robotics**, **speech processing**, and **reasoning** into one desktop robot.
+So far Pico combines **embedded robotics**, **speech processing**, and **reasoning** into one desktop robot.
 
 ---
 
