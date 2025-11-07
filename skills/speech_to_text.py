@@ -5,20 +5,23 @@ import sounddevice as sd
 import soundfile as sf
 import numpy as np
 
-# ----- Get user audio -----
 def record_audio(stime):
-    samplerate = 16000 # audio-samples/second, represents soundwaves
-    threshold = 0.3 # how quiet the sound needs to be to count as 'silence'
-    silence_time = stime # how long in seconds silence must lasts before stopping
-    block_size = 1024 # grab 1024 audio-samples at a time
-    silence_time_tracker = 0 # silence time tracker
-    audio = [] # stores all recorded chunks
+    """
+    This function records user input and stores into a .wav file.
+    """
 
-    # open microphone stream
+    samplerate = 16000
+    threshold = 0.3
+    silence_time = stime
+    block_size = 1024
+    silence_time_tracker = 0
+    audio = []
+
+    # Open mic stream
     with sd.InputStream(samplerate=samplerate, channels=1) as stream:
         while True:
-            block = stream.read(block_size)[0] # reads one chunk of audio from the mic
-            volume = np.linalg.norm(block) # computes magnitude of the vector giving us a volume for that block
+            block = stream.read(block_size)[0]
+            volume = np.linalg.norm(block) 
             audio.append(block)
             if volume < threshold:
                 silence_time_tracker += block_size / samplerate
@@ -31,8 +34,13 @@ def record_audio(stime):
     sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
     return data, samplerate
 
-# ----- Translate audio to text -----
 def translate_audio_to_text():
+    """
+    This is a speech-to-text function using openai's gpt-4o-transcribe model.
+    - This works much better than any local model due to rasppi's hardware limitations.
+    - Function loads .wav file from record_audio() and translates audio to text.
+    """
+
     load_dotenv()
 
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

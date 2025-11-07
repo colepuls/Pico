@@ -4,21 +4,24 @@ import numpy as np
 import wave
 from piper import PiperVoice
 
-# ----- TTS Function -----
 def speak(text):
-    # generate sound file
+    """
+    This is a text-to-speech function using the piper model locally.
+    - Loads the model and speaks any text passed through it.
+    """
+
+    # Generate sound file
     voice = PiperVoice.load("/home/colecodes/projects/Pico/piper-voices/en_US-kusal-medium.onnx")
     with wave.open("/home/colecodes/projects/Pico/audio_files/sound.wav", "wb") as wav_file:
         voice.synthesize_wav(text, wav_file)
 
-    # play sound file through speaker
+    # Read sound file
     data, samplerate = sf.read("/home/colecodes/projects/Pico/audio_files/sound.wav", dtype='float32')
 
-    # tweak speaker volume
-    volume = 7
-    # stabalize
-    data = np.clip(data * volume, -1.0, 1.0)
+    volume = 7 # tweak volume
+
+    data = np.clip(data * volume, -1.0, 1.0) # stabalize
     
-    sd.play(data, samplerate)
-    # wait for audio to finish
-    sd.wait()
+    sd.play(data, samplerate) # play audio
+    
+    sd.wait() # wait for audio to finish

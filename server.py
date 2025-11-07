@@ -16,6 +16,7 @@ camera.configure(config)
 camera.start()
 time.sleep(0.2) # quick warmup before starting server
 
+# Webpage
 server = Flask(__name__)
 HTML = """
 <!doctype html>
@@ -45,9 +46,15 @@ HTML = """
 
 @server.route("/")
 def index():
+    """
+    This function loads all if the html code.
+    """
     return render_template_string(HTML)
 
 def get_frames():
+    """
+    This function loads a bunch of frames creating a live video stream.
+    """
     while True:
         frame = camera.capture_array()
         ok, buf = cv2.imencode('.jpg', frame)
@@ -59,10 +66,16 @@ def get_frames():
 
 @server.route("/video")
 def video():
+    """
+    This function loads the live video stream onto the webpage.
+    """
     return Response(get_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @server.route("/forward")
 def forward():
+    """
+    This function loads a button onto the webpage that moves the robot motor forward.
+    """
     motor = attach_motor()
     run_motor_forward(motor)
     time.sleep(0.05)
@@ -70,12 +83,17 @@ def forward():
 
 @server.route("/backward")
 def backward():
+    """
+    This function loads a button onto the webpage that moves the robot motor backward.
+    """
     motor = attach_motor()
     run_motor_backward(motor)
     time.sleep(0.05)
     stop_motor(motor)
 
-
 def run_server():
+    """
+    This function starts the webpage server.
+    """
     server.run(host="0.0.0.0", port=5000, threaded=True, use_reloader=False, debug=False)
 
