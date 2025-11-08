@@ -33,38 +33,45 @@ def main():
 
     # ---------- Robot loop ----------
     while True:
+        # ---------- Asleep loop ----------
         awake = False
         print("---- Wake up Pico ----\n")
-        # ---------- Asleep loop ----------
         while awake == False:
-            data, sr = record_audio(stime=0.1)
+            data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
-            if prob_wakeword > 0.80:
+            if prob_wakeword > 0.80: # if wakeword was predicted wake up robot
                 awake = True
                 break
 
         # ---------- Awake loop ----------
         while awake == True:
-            # Get user_input
             print("---- Talk to Pico ----\n")
-            record_audio(stime=2.0)
+            _, _, speech_detected = record_audio(stime=2.0) # get user input
+
+            if not speech_detected: # if no speech detected go back to sleep
+                awake = False
+                break
+
             user_input = translate_audio_to_text()
             print("User: ", end="")
             typewriter(user_input, 0.03)
 
             # Get a skill response
             if weather_phrase in user_input.lower():
-                temperature = get_weather(38.95, -92.33) # Columbia, MO
-                typewriter(f"The temperature is {temperature} degrees farenheit.", 0.03)
-                speak(f"The temperature is {temperature} degrees farenheit.")
+                weather = get_weather(38.95, -92.33) # Columbia, MO
+                typewriter(f"{weather}", 0.03)
+                speak(f"{weather}")
                 awake = False
                 break
+
             if current_time_phrase in user_input.lower():
                 current_time = get_time()
                 typewriter(f"The time is {current_time}", 0.03)
                 speak(f"The time is {current_time}")
                 awake = False
                 break
+
+            # Needs to be threaded or stop live video feed when called
             if picture_phrase in user_input.lower():
                 typewriter("Taking photo...", 0.03)
                 take_picture("./images/photo.jpg")

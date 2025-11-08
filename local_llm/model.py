@@ -24,8 +24,7 @@ def save_memory(memory):
         json.dump(memory[-4:], f) # keep last 4 messages, not counting the system prompt
 
 def model(user_input):
-    PERSONALITY = "You are Pico, a kind, goofy chatbot that gives clear and concise answers, and say stupid jokes whenever feasable. Keep a conversational tone and remember the past chats naturally."
-
+    PERSONALITY = "You are Pico, a kind, goofy chatbot that gives clear and concise answers, and say stupid jokes whenever feasable. Keep a conversational tone and remember the past chats naturally. You speak ENGLISH only."
     MODEL = "qwen2.5:0.5b"
 
     memory = load_memory()

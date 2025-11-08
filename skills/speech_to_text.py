@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
+import re
 
 def record_audio(stime):
     """
@@ -16,6 +17,7 @@ def record_audio(stime):
     block_size = 1024
     silence_time_tracker = 0
     audio = []
+    speech_detected = False
 
     # Open mic stream
     with sd.InputStream(samplerate=samplerate, channels=1) as stream:
@@ -28,11 +30,12 @@ def record_audio(stime):
                 if silence_time_tracker > silence_time:
                     break
             else:
-                silence = 0
+                silence_time_tracker = 0
+                speech_detected = True
         
     data = np.concatenate(audio, axis=0) # combine all audio chunks
     sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
-    return data, samplerate
+    return data, samplerate, speech_detected
 
 def translate_audio_to_text():
     """
