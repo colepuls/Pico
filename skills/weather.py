@@ -2,7 +2,7 @@ import requests
 
 def get_weather(lat, lon):
     """
-    This function simply gets the current weather using a url search.
+    This function simply gets current weather condiotions using requests from a free weather api.
     """
 
     url = "https://api.open-meteo.com/v1/forecast"

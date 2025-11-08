@@ -7,6 +7,8 @@ from skills.speech_to_text import translate_audio_to_text
 from skills.get_current_time import get_time
 from skills.photo import take_picture
 from skills.wakeword.wakeword_runtime import get_prob
+from skills.play_sounds import play_sound
+from skills.joke import tell_a_joke
 import time
 
 def typewriter(text, delay):
@@ -30,6 +32,7 @@ def main():
     weather_phrase = "weather"
     picture_phrase = "photo"
     current_time_phrase = "time"
+    joke_phrase = "joke"
 
     # ---------- Robot loop ----------
     while True:
@@ -45,6 +48,7 @@ def main():
 
         # ---------- Awake loop ----------
         while awake == True:
+            play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
             print("---- Talk to Pico ----\n")
             _, _, speech_detected = record_audio(stime=2.0) # get user input
 
@@ -61,6 +65,14 @@ def main():
                 weather = get_weather(38.95, -92.33) # Columbia, MO
                 typewriter(f"{weather}", 0.03)
                 speak(f"{weather}")
+                awake = False
+                break
+
+            if joke_phrase in user_input.lower():
+                joke = tell_a_joke()
+                typewriter(f"{joke}", 0.03)
+                speak(f"{joke}")
+                play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
                 awake = False
                 break
 
