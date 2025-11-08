@@ -2,6 +2,7 @@ import ollama
 import json
 import os
 from dotenv import load_dotenv
+from colorama import Fore, init; init()
 
 load_dotenv()
 
@@ -41,7 +42,7 @@ def model(user_input):
     response = ""
     for word in ollama.chat(model=MODEL, messages=messages, stream=True):
         content = word["message"]["content"]   
-        print(content, end="", flush=True)
+        print(f"{Fore.BLUE}{content}", end="", flush=True)
         response += content
     print("\n")
 

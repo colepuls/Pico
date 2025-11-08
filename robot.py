@@ -9,6 +9,7 @@ from skills.photo import take_picture
 from skills.wakeword.wakeword_runtime import get_prob
 from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
+from colorama import Fore, init; init()
 import time
 
 def typewriter(text, delay):
@@ -38,7 +39,7 @@ def main():
     while True:
         # ---------- Asleep loop ----------
         awake = False
-        print("---- Wake up Pico ----\n")
+        print(f"{Fore.RED}---- Wake up Pico ----\n")
         while awake == False:
             data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
@@ -49,7 +50,7 @@ def main():
         # ---------- Awake loop ----------
         while awake == True:
             play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
-            print("---- Talk to Pico ----\n")
+            print(f"{Fore.GREEN}---- Talk to Pico ----\n")
             _, _, speech_detected = record_audio(stime=2.0) # get user input
 
             if not speech_detected: # if no speech detected go back to sleep
@@ -57,20 +58,20 @@ def main():
                 break
 
             user_input = translate_audio_to_text()
-            print("User: ", end="")
-            typewriter(user_input, 0.03)
+            print(f"{Fore.YELLOW}User: ", end="")
+            typewriter(f"{Fore.YELLOW}{user_input}", 0.03)
 
             # Get a skill response
             if weather_phrase in user_input.lower():
                 weather = get_weather(38.95, -92.33) # Columbia, MO
-                typewriter(f"{weather}", 0.03)
+                typewriter(f"{Fore.BLUE}Pico: {weather}", 0.03)
                 speak(f"{weather}")
                 awake = False
                 break
 
             if joke_phrase in user_input.lower():
                 joke = tell_a_joke()
-                typewriter(f"{joke}", 0.03)
+                typewriter(f"{Fore.BLUE}Pico: {joke}", 0.03)
                 speak(f"{joke}")
                 play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
                 awake = False
@@ -78,7 +79,7 @@ def main():
 
             if current_time_phrase in user_input.lower():
                 current_time = get_time()
-                typewriter(f"The time is {current_time}", 0.03)
+                typewriter(f"{Fore.BLUE}Pico: The time is {current_time}", 0.03)
                 speak(f"The time is {current_time}")
                 awake = False
                 break
@@ -92,7 +93,7 @@ def main():
                 break
 
             # Get llm response
-            print("Pico: ", end="")
+            print(f"{Fore.BLUE}Pico: ", end="")
             response = model(user_input)
             speak(response)
             awake = False
