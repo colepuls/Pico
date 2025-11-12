@@ -52,8 +52,4 @@ def get_weather(lat, lon):
 
     codition = WEATHER_CODES.get(weather_code)
 
-    return f"""
-    The current weather is {current_temperature} degrees fahrenheit.
-    Today's low is {daily_low} degrees and the high is {daily_high} degrees.
-    The conditions are {codition}.
-    """
+    return f"The current weather is {current_temperature} degrees fahrenheit. Today's low is {daily_low} degrees and the high is {daily_high} degrees. The conditions are {codition}."

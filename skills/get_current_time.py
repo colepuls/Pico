@@ -6,4 +6,4 @@ def get_time():
     """
     time = datetime.now()
     time = time.strftime("%I:%M %p")
-    return time
+    return f"The time is {time}"

@@ -39,12 +39,9 @@ def model(user_input):
         user_message
     ]
 
-    response = ""
-    for word in ollama.chat(model=MODEL, messages=messages, stream=True):
-        content = word["message"]["content"]   
-        print(f"{Fore.BLUE}{content}", end="", flush=True)
-        response += content
-    print("\n")
+    output = ollama.chat(model=MODEL, messages=messages)
+    response = output["message"]["content"]
+    
 
     response_message = {'role': 'assistant', 'content': response}
 

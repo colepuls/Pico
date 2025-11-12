@@ -10,16 +10,53 @@ from skills.wakeword.wakeword_runtime import get_prob
 from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
 from colorama import Fore, init; init()
-import time
 
-def typewriter(text, delay):
-    """
-    This function gives hard coded prints a typing effect in the CLI.
-    """
-    for char in text:
-        print(char, end='', flush=True)
-        time.sleep(delay)
-    print("\n")
+def log(text):
+    with open("chatlog.txt", "a") as f:
+        f.write(text)
+
+def get_response(user_input):
+
+    weather_phrase = "weather"
+    picture_phrase = "photo"
+    current_time_phrase = "time"
+    joke_phrase = "joke"
+
+    if weather_phrase in user_input.lower():
+        response = get_weather(38.95, -92.33) # Columbia, MO
+        # print(f"{Fore.BLUE}{response}\n")
+        log(f"{response}\n\n")
+        speak(response)
+        return response
+
+    if joke_phrase in user_input.lower():
+        response = tell_a_joke()
+        # print(f"{Fore.BLUE}{response}\n")
+        log(f"{response}\n\n")
+        speak(response)
+        play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
+        return response
+
+
+    if current_time_phrase in user_input.lower():
+        response = get_time()
+        # print(f"{Fore.BLUE}{response}\n")
+        log(f"{response}\n\n")
+        speak(response)
+        return response
+
+    # NOTE: Needs to be threaded or stop live video feed when called
+    if picture_phrase in user_input.lower():
+        print(f"{Fore.BLUE}Taking photo...\n")
+        take_picture("./images/photo.jpg")
+        print(f"{Fore.BLUE}Photo taken.\n")
+
+    # Get llm response
+    response = model(user_input)
+    # print(f"{Fore.BLUE}{response}\n")
+    log(f"{response}\n\n")
+    speak(response)
+    return response
 
 def main():
     """
@@ -29,17 +66,13 @@ def main():
         - Awake loop will take user input (voice) and use one of the skill responses or llm response.
     """
 
-    # Skill phrase loads
-    weather_phrase = "weather"
-    picture_phrase = "photo"
-    current_time_phrase = "time"
-    joke_phrase = "joke"
+    awake = False
 
-    # ---------- Robot loop ----------
     while True:
+
         # ---------- Asleep loop ----------
-        awake = False
-        print(f"{Fore.RED}---- Wake up Pico ----\n")
+        # print(f"{Fore.RED}---- Wake up Pico ----\n")
+        log("---------- Wake up Pico ----------\n")
         while awake == False:
             data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
@@ -50,7 +83,8 @@ def main():
         # ---------- Awake loop ----------
         while awake == True:
             play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
-            print(f"{Fore.GREEN}---- Talk to Pico ----\n")
+            # print(f"{Fore.GREEN}---- Talk to Pico ----\n")
+            log("----------- Talk to Pico -----------\n\n")
             _, _, speech_detected = record_audio(stime=2.0) # get user input
 
             if not speech_detected: # if no speech detected go back to sleep
@@ -58,43 +92,41 @@ def main():
                 break
 
             user_input = translate_audio_to_text()
-            print(f"{Fore.YELLOW}User: ", end="")
-            typewriter(f"{Fore.YELLOW}{user_input}", 0.03)
+            # print(f"{Fore.YELLOW}{user_input}")
+            log(f"{user_input}\n\n")
 
-            # Get a skill response
-            if weather_phrase in user_input.lower():
-                weather = get_weather(38.95, -92.33) # Columbia, MO
-                typewriter(f"{Fore.BLUE}Pico: {weather}", 0.03)
-                speak(f"{weather}")
-                awake = False
-                break
+            get_response(user_input)
 
-            if joke_phrase in user_input.lower():
-                joke = tell_a_joke()
-                typewriter(f"{Fore.BLUE}Pico: {joke}", 0.03)
-                speak(f"{joke}")
-                play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
-                awake = False
-                break
-
-            if current_time_phrase in user_input.lower():
-                current_time = get_time()
-                typewriter(f"{Fore.BLUE}Pico: The time is {current_time}", 0.03)
-                speak(f"The time is {current_time}")
-                awake = False
-                break
-
-            # Needs to be threaded or stop live video feed when called
-            if picture_phrase in user_input.lower():
-                typewriter("Taking photo...", 0.03)
-                take_picture("./images/photo.jpg")
-                typewriter("Photo taken.", 0.03)
-                awake = False
-                break
-
-            # Get llm response
-            print(f"{Fore.BLUE}Pico: ", end="")
-            response = model(user_input)
-            speak(response)
             awake = False
             break
+
+if __name__ == '__main__':
+    main()
+
+"""
+TO DO:
+- System report (CPU temp/usage, uptime, connection speed, RAM)
+- Play music
+- Reminders & Alarms
+- Today's news summarizer
+- Easter eggs: Hidden phrases that trigger funny responses
+- Dance
+- Wake animation (already have chime maybe add some visual and motor movement)
+- Gesture recognition
+- Face detection, have pico recognize different people
+- Add to where when user does not say anything for 3 minitues pico's visual display goes to sleep
+- Add proper motion control
+- 3d print parts
+- Update web server to show more things
+- Give pico a visual face (eyes)
+- Assemble all the parts
+- Daily Bible verse
+- IDLE behaviors
+- Github notifier "You have 2 new commits pushed to 'repo'."
+- Ambient noise (rain, forest)
+- Auto-greeting (when face detected)
+- Follow movement (turn to look at person if moving around room)
+- Move code files + venv to new profile (desktop corrupt on current profile, need desktop to setup display)
+- Fix camera colors
+- Add model visual to server
+"""
