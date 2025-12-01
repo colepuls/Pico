@@ -7,8 +7,6 @@ import time
 import cv2
 from robot import main
 
-open("chatlog.txt", "w").close() # reset logs before starting server
-
 # Webpage
 server = Flask(__name__)
 
@@ -78,15 +76,6 @@ def backward():
     run_motor_backward(motor)
     time.sleep(0.05)
     stop_motor(motor)
-
-@server.route("/chatlog")
-def chalog():
-    try:
-        with open("chatlog.txt", "r") as f:
-            content = f.read()
-    except FileNotFoundError:
-        content = ""
-    return Response(content, mimetype="text/plain")
 
 @atexit.register
 def cleanup():

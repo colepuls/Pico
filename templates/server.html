@@ -2,133 +2,39 @@
 <title>Pico Server</title>
 <style>
   body {
-    margin: 0;
-    background: #111;
-    display: flex;
-    height: 100vh;
-    color: #eee;
-    font-family: sans-serif;
-  }
-
-  #left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-right: 2px solid #222;
+    margin:0;
+    background:#111;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
   }
 
   img {
-    max-width: 90%;
-    max-height: 70vh;
-    border-radius: 5px;
+    max-width:90vw;
+    max-height:70vh;
   }
 
   button {
-    background-color: black;
-    color: lightblue;
-    border: 1px solid lightblue;
-    padding: 10px 20px;
-    margin: 4px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 18px;
+      background-color:#fff;
+      color:#000;
+      border:none;
+      padding:10px 20px;
+      margin:10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:18px;
   }
 
-  #right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-  }
-
-  #chat {
-    background: #1b1b1b;
-    border-radius: 10px;
-    padding: 10px;
-    flex-grow: 1;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    font-size: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .user {
-    align-self: flex-end;
-    color: yellow;
-    text-align: right;
-  }
-
-  .robot {
-    align-self: flex-start;
-    color: lightblue;
-    text-align: left;
-  }
-
-  .center-red {
-    align-self: center;
-    color: red;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .center-green {
-    align-self: center;
-    color: lightgreen;
-    text-align: center;
-    font-weight: bold;
+  button:hover {
+    background-color:#ddd;
   }
 </style>
 
-<div id="left">
-  <h2>Camera</h2>
-  <div>
-    <button onclick="fetch('/backward')">←</button>
-    <button onclick="fetch('/forward')">→</button>
-  </div>
-  <img src="/video" alt="video">
+<img src="/video" alt="video">
+
+<div>
+  <button onclick="fetch('/forward')">→</button>
+  <button onclick="fetch('/backward')">←</button>
 </div>
-
-<div id="right">
-  <h2>Chat</h2>
-  <div id="chat">Loading...</div>
-</div>
-
-<script>
-async function updateChat() {
-  try {
-    const res = await fetch("/chatlog", { cache: "no-store" });
-    const text = await res.text();
-    const chatDiv = document.getElementById("chat");
-    chatDiv.innerHTML = "";
-
-    const lines = text.trim().split("\n");
-
-    lines.forEach((line, index) => {
-      const msg = document.createElement("div");
-      const clean = line.trim();
-
-      if (clean.includes("Wake up")) {
-        msg.className = "center-red";
-      } else if (clean.includes("Talk to Pico")) {
-        msg.className = "center-green";
-      } else {
-        msg.className = index % 2 === 0 ? "robot" : "user";
-      }
-
-      msg.textContent = clean;
-      chatDiv.appendChild(msg);
-    });
-
-    chatDiv.scrollTop = chatDiv.scrollHeight;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-setInterval(updateChat, 500);
-updateChat();
-</script>

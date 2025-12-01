@@ -1,10 +1,11 @@
-from openai import OpenAI
 import os
-from dotenv import load_dotenv
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
-import re
+import sherpa_onnx
+
+SHERPA_MODEL_DIR = "/home/colecodes/projects/Pico/sherpa-onnx-stt"
+sherpa_recognizer = None # keep a single recognizer in memory so the model only loads once
 
 def record_audio(stime):
     """
@@ -37,24 +38,76 @@ def record_audio(stime):
     sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
     return data, samplerate, speech_detected
 
-def translate_audio_to_text():
+def create_sherpa_recognizer():
     """
-    This is a speech-to-text function using openai's gpt-4o-transcribe model.
-    - This works much better than any local model due to rasppi's hardware limitations.
-    - Function loads .wav file from record_audio() and translates audio to text.
+    Create a sherpa-onnx OnlineRecognizer for the Zipformer transducer model.
     """
 
-    load_dotenv()
+    encoder = os.path.join(
+        SHERPA_MODEL_DIR,
+        "encoder-epoch-99-avg-1-chunk-16-left-128.int8.onnx",
+    )
 
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    decoder = os.path.join(
+        SHERPA_MODEL_DIR,
+        "decoder-epoch-99-avg-1-chunk-16-left-128.int8.onnx",
+    )
 
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    joiner = os.path.join(
+        SHERPA_MODEL_DIR,
+        "joiner-epoch-99-avg-1-chunk-16-left-128.int8.onnx",
+    )
 
-    with open("/home/colecodes/projects/Pico/audio_files/audio.wav", "rb") as f:
-        transcript = client.audio.transcriptions.create(
-            model="gpt-4o-transcribe",
-            file=f,
-            response_format="text"
-        )
+    tokens = os.path.join(SHERPA_MODEL_DIR, "tokens.txt")
 
-    return transcript
+    recognizer = sherpa_onnx.OnlineRecognizer.from_transducer(
+        tokens=tokens,
+        encoder=encoder,
+        decoder=decoder,
+        joiner=joiner,
+        num_threads=2,
+        sample_rate=16000,
+        feature_dim=80,
+        enable_endpoint_detection=False,  # single utterance from file
+        provider="cpu",
+        debug=False,
+    )
+
+    return recognizer
+
+
+def get_sherpa_recognizer():
+    global sherpa_recognizer
+    if sherpa_recognizer is None:
+        sherpa_recognizer = create_sherpa_recognizer()
+    return sherpa_recognizer
+
+
+def translate_audio_to_text(audio_path="/home/colecodes/projects/Pico/audio_files/audio.wav", ) -> str:
+
+    recognizer = get_sherpa_recognizer()
+
+    # Load waveform
+    samples, sr = sf.read(audio_path, dtype="float32")
+
+    # If stereo, average to mono
+    if samples.ndim > 1:
+        samples = samples.mean(axis=1)
+
+    # Create new stream
+    stream = recognizer.create_stream()
+
+    # Resample if needed
+    stream.accept_waveform(sr, samples)
+
+    # Process
+    while recognizer.is_ready(stream):
+        recognizer.decode_stream(stream)
+
+    # Result
+    text = recognizer.get_result(stream).strip()
+
+    # Reset stream to reuse
+    recognizer.reset(stream)
+
+    return text

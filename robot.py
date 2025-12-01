@@ -9,11 +9,14 @@ from skills.photo import take_picture
 from skills.wakeword.wakeword_runtime import get_prob
 from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
-from colorama import Fore, init; init()
+from colorama import Fore
+import time
 
-def log(text):
-    with open("chatlog.txt", "a") as f:
-        f.write(text)
+def animate_print(text, delay, color):
+    for c in text:
+        print(color + c, end='', flush=True)
+        time.sleep(delay)
+    print("\n")
 
 def get_response(user_input):
 
@@ -24,39 +27,29 @@ def get_response(user_input):
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
-        # print(f"{Fore.BLUE}{response}\n")
-        log(f"{response}\n\n")
         speak(response)
-        return response
+        return response, False
 
     if joke_phrase in user_input.lower():
         response = tell_a_joke()
-        # print(f"{Fore.BLUE}{response}\n")
-        log(f"{response}\n\n")
         speak(response)
         play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
-        return response
+        return response, False
 
 
     if current_time_phrase in user_input.lower():
         response = get_time()
-        # print(f"{Fore.BLUE}{response}\n")
-        log(f"{response}\n\n")
         speak(response)
-        return response
+        return response, False
 
     # NOTE: Needs to be threaded or stop live video feed when called
     if picture_phrase in user_input.lower():
-        print(f"{Fore.BLUE}Taking photo...\n")
         take_picture("./images/photo.jpg")
-        print(f"{Fore.BLUE}Photo taken.\n")
 
     # Get llm response
     response = model(user_input)
-    # print(f"{Fore.BLUE}{response}\n")
-    log(f"{response}\n\n")
     speak(response)
-    return response
+    return response, True
 
 def main():
     """
@@ -70,9 +63,9 @@ def main():
 
     while True:
 
-        # ---------- Asleep loop ----------
-        # print(f"{Fore.RED}---- Wake up Pico ----\n")
-        log("---------- Wake up Pico ----------\n")
+        # Asleep loop
+        print(Fore.RED + "Asleep")
+        print(Fore.RED + "------\n")
         while awake == False:
             data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
@@ -80,25 +73,27 @@ def main():
                 awake = True
                 break
 
-        # ---------- Awake loop ----------
+        # Awake loop
+        print(Fore.GREEN + "Awake")
+        print(Fore.GREEN + "-----\n")
         while awake == True:
             play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
-            # print(f"{Fore.GREEN}---- Talk to Pico ----\n")
-            log("----------- Talk to Pico -----------\n\n")
             _, _, speech_detected = record_audio(stime=2.0) # get user input
-
             if not speech_detected: # if no speech detected go back to sleep
                 awake = False
                 break
 
-            user_input = translate_audio_to_text()
-            # print(f"{Fore.YELLOW}{user_input}")
-            log(f"{user_input}\n\n")
+            user_input = translate_audio_to_text().lower()
+            animate_print(f"{user_input}", 0.02, Fore.YELLOW)
 
-            get_response(user_input)
-
-            awake = False
-            break
+            response, is_llm = get_response(user_input)
+            if is_llm == True:
+                awake = False
+                break
+            if is_llm == False: 
+                animate_print(f"{response}", 0.02, Fore.BLUE)
+                awake = False
+                break
 
 if __name__ == '__main__':
     main()
