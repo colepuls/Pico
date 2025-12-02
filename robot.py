@@ -9,6 +9,7 @@ from skills.photo import take_picture
 from skills.wakeword.wakeword_runtime import get_prob
 from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
+from skills.system_report import get_system_report
 from colorama import Fore
 import time
 
@@ -24,6 +25,7 @@ def get_response(user_input):
     picture_phrase = "photo"
     current_time_phrase = "time"
     joke_phrase = "joke"
+    system_report_phrase = "report"
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
@@ -39,6 +41,11 @@ def get_response(user_input):
 
     if current_time_phrase in user_input.lower():
         response = get_time()
+        speak(response)
+        return response, False
+    
+    if system_report_phrase in user_input.lower():
+        response = get_system_report()
         speak(response)
         return response, False
 
@@ -64,8 +71,8 @@ def main():
     while True:
 
         # Asleep loop
-        print(Fore.RED + "Asleep")
-        print(Fore.RED + "------\n")
+        print(Fore.RED + "Asleep (wake up pico)")
+        print(Fore.RED + "---------------------\n")
         while awake == False:
             data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
@@ -74,8 +81,8 @@ def main():
                 break
 
         # Awake loop
-        print(Fore.GREEN + "Awake")
-        print(Fore.GREEN + "-----\n")
+        print(Fore.GREEN + "Awake (listening)")
+        print(Fore.GREEN + "-----------------\n")
         while awake == True:
             play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
             _, _, speech_detected = record_audio(stime=2.0) # get user input
@@ -83,9 +90,13 @@ def main():
                 awake = False
                 break
 
+            print(Fore.YELLOW + "User")
+            print(Fore.YELLOW + "----")
             user_input = translate_audio_to_text().lower()
             animate_print(f"{user_input}", 0.02, Fore.YELLOW)
 
+            print(Fore.BLUE + "Pico")
+            print(Fore.BLUE + "----")
             response, is_llm = get_response(user_input)
             if is_llm == True:
                 awake = False
@@ -107,13 +118,12 @@ TO DO:
 - Easter eggs: Hidden phrases that trigger funny responses
 - Dance
 - Wake animation (already have chime maybe add some visual and motor movement)
-- Gesture recognition
+- Gesture recognition (wake when waved at)
 - Face detection, have pico recognize different people
 - Add to where when user does not say anything for 3 minitues pico's visual display goes to sleep
 - Add proper motion control
 - 3d print parts
-- Update web server to show more things
-- Give pico a visual face (eyes)
+- Create visual screen
 - Assemble all the parts
 - Daily Bible verse
 - IDLE behaviors
@@ -121,7 +131,6 @@ TO DO:
 - Ambient noise (rain, forest)
 - Auto-greeting (when face detected)
 - Follow movement (turn to look at person if moving around room)
-- Move code files + venv to new profile (desktop corrupt on current profile, need desktop to setup display)
 - Fix camera colors
-- Add model visual to server
+- Add model visual (create website showcasing Pico)
 """
