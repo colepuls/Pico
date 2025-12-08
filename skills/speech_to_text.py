@@ -83,7 +83,9 @@ def get_sherpa_recognizer():
     return sherpa_recognizer
 
 
-def translate_audio_to_text(audio_path="/home/colecodes/projects/Pico/audio_files/audio.wav", ) -> str:
+def translate_audio_to_text():
+
+    audio_path="/home/colecodes/projects/Pico/audio_files/audio.wav"
 
     recognizer = get_sherpa_recognizer()
 

@@ -10,6 +10,7 @@ from skills.wakeword.wakeword_runtime import get_prob
 from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
 from skills.system_report import get_system_report
+from skills.bibleverse import get_random_verse
 from colorama import Fore
 import time
 
@@ -26,6 +27,7 @@ def get_response(user_input):
     current_time_phrase = "time"
     joke_phrase = "joke"
     system_report_phrase = "report"
+    bible_verse_phrase = "verse"
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
@@ -46,6 +48,11 @@ def get_response(user_input):
     
     if system_report_phrase in user_input.lower():
         response = get_system_report()
+        speak(response)
+        return response, False
+    
+    if bible_verse_phrase in user_input.lower():
+        response = get_random_verse()
         speak(response)
         return response, False
 
@@ -109,13 +116,8 @@ def main():
 if __name__ == '__main__':
     main()
 
+# TODO:
 """
-TO DO:
-- System report (CPU temp/usage, uptime, connection speed, RAM)
-- Play music
-- Reminders & Alarms
-- Today's news summarizer
-- Easter eggs: Hidden phrases that trigger funny responses
 - Dance
 - Wake animation (already have chime maybe add some visual and motor movement)
 - Gesture recognition (wake when waved at)
@@ -125,10 +127,8 @@ TO DO:
 - 3d print parts
 - Create visual screen
 - Assemble all the parts
-- Daily Bible verse
 - IDLE behaviors
 - Github notifier "You have 2 new commits pushed to 'repo'."
-- Ambient noise (rain, forest)
 - Auto-greeting (when face detected)
 - Follow movement (turn to look at person if moving around room)
 - Fix camera colors

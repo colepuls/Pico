@@ -11,7 +11,6 @@ It listens for a wakeword "Pico" to wakeup, processes speech, generates response
   <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="60" />
   <img src="https://pytorch.org/assets/images/pytorch-logo.png" width="70" />
   <img src="assets/flask.png" width="60"/>
-  <img src="assets/openai.png" width="90"/>
   <img src="assets/ollama.png" width="60"/>
   <img src="assets/piper.png" width="90"/>
   <img src="assets/rasp.png" width="60"/>
@@ -20,7 +19,7 @@ It listens for a wakeword "Pico" to wakeup, processes speech, generates response
 **Core Technologies**
 - **Python 3.11** - Main language for entire robot
 - **PyTorch / Torchaudio** - Wakeword RNN
-- **OpenAI GPT-4o-Transcribe** - Speech-to-text model, used becasue of Pi's hardware limitations
+- **Sherpa-onnx** - Local speech-to-text model
 - **Piper** - Local text-to-speech model
 - **Gpiozero** - Servo motor control
 - **Picamera2** - Video feed
@@ -42,12 +41,7 @@ Repository to wakeword model: https://github.com/colepuls/wakeword
 ---
 
 ## To do
-- [ ] Implement facedetection
-- [ ] Add visual display
-- [ ] Update motion control
-- [ ] Update webserver
-- [ ] Some other things ...
-- [ ] 3d print chasis and put it all together
+- A lot...
 
 ---
 
