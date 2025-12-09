@@ -16,10 +16,11 @@ def get_random_verse():
         except Exception:
             continue
 
-    verse = bible.get_verse_text(rand_verse_id, version=VERSION)
+    verse_text = bible.get_verse_text(rand_verse_id, version=VERSION)
 
-    return verse
+    verse_info = bible.get_book_chapter_verse(rand_verse_id)
+
+    return f'{verse_info[0].title} {verse_info[1]}:{verse_info[2]} "{verse_text}"'
 
 if __name__ == "__main__":
-    verse = get_random_verse()
-    print(verse)
+   print(get_random_verse())
