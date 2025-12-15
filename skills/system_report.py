@@ -1,6 +1,9 @@
 from gpiozero import CPUTemperature
 import psutil
 import time
+import os
+
+os.chdir("/home/colecodes/projects/Pico/motor_files") # make auto .lgd files stored in specific folder
 
 def get_cpu_temp():
     cpu = CPUTemperature()

@@ -11,6 +11,7 @@ from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
 from skills.system_report import get_system_report
 from skills.bibleverse import get_random_verse
+from skills.motion import dance
 from colorama import Fore
 import time
 
@@ -28,6 +29,7 @@ def get_response(user_input):
     joke_phrase = "joke"
     system_report_phrase = "report"
     bible_verse_phrase = "verse"
+    dance_phrase = "dance"
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
@@ -39,7 +41,6 @@ def get_response(user_input):
         speak(response)
         play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
         return response, False
-
 
     if current_time_phrase in user_input.lower():
         response = get_time()
@@ -55,10 +56,20 @@ def get_response(user_input):
         response = get_random_verse()
         speak(response)
         return response, False
+    
+    if dance_phrase in user_input.lower():
+        response = "Boom shakalaka"
+        speak(response)
+        dance()
+        return response, False
+
 
     # NOTE: Needs to be threaded or stop live video feed when called
     if picture_phrase in user_input.lower():
-        take_picture("./images/photo.jpg")
+        response = "Taking photo"
+        speak(response)
+        take_picture("'/home/colecodes/projects/Pico/images/photo.jpg'")
+        return response, False
 
     # Get llm response
     response = model(user_input)
@@ -108,7 +119,7 @@ def main():
             if is_llm == True:
                 awake = False
                 break
-            if is_llm == False: 
+            if is_llm == False:
                 animate_print(f"{response}", 0.02, Fore.BLUE)
                 awake = False
                 break

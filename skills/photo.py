@@ -10,7 +10,7 @@ def take_picture(path):
     try:
         # Initialize camera
         cam = Picamera2()
-        cam.configure(cam.create_still_configuration(transform=Transform(hflip=True, vflip=True)))
+        cam.configure(cam.create_still_configuration(transform=Transform(hflip=True, vflip=False)))
 
         # Take photo
         cam.start()
@@ -20,6 +20,13 @@ def take_picture(path):
         
         # Reset
         cam.close()
-        cam = None    
+        cam = None
+            
     except Exception as e:
         print("Camera error:", e)
+
+def main():
+    take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
+
+if __name__ == '__main__':
+    main()
