@@ -27,3 +27,5 @@ def get_ram_info():
 
 def get_system_report():
     return f"{get_cpu_temp()}\n\n{get_cpu_usage()}\n\n{get_uptime()}\n\n{get_ram_info()}"
+
+# print(get_system_report())

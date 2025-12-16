@@ -12,10 +12,22 @@ def dance():
 
     for _ in range(3):
         servo.angle = 90
-        time.sleep(1)
+        time.sleep(0.5)
         servo.angle = -90
-        time.sleep(1)
+        time.sleep(0.5)
 
     servo.angle = 0
+    time.sleep(0.5)
+    servo = None
+
+def test():
+    PIN = 21
+    servo = AngularServo(PIN)
+    servo.max()
     time.sleep(1)
-    servo.detach()
+    servo.angle = 0
+    time.sleep(1)
+
+if __name__ == '__main__':
+    dance()
+    #test()
