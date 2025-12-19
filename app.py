@@ -13,8 +13,6 @@ def start_robot():
     facetracker_thread.start()
     robot_loop_thread.join()
     facetracker_thread.join()
-    test = 45
-    print(test)
 
 if __name__ == "__main__":
     start_robot()
