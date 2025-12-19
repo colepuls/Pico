@@ -12,13 +12,14 @@ from skills.joke import tell_a_joke
 from skills.system_report import get_system_report
 from skills.bibleverse import get_random_verse
 from skills.motion import dance
+from skills.reportdevlog import read_last_devlog
 from colorama import Fore
-import time
+import time as t
 
 def animate_print(text, delay, color):
     for c in text:
         print(color + c, end='', flush=True)
-        time.sleep(delay)
+        t.sleep(delay)
     print("\n")
 
 def get_response(user_input):
@@ -30,9 +31,16 @@ def get_response(user_input):
     system_report_phrase = "report"
     bible_verse_phrase = "verse"
     dance_phrase = "dance"
+    track_phrase = "track"
+    devlog_phrase = "log"
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
+        speak(response)
+        return response, False
+    
+    if devlog_phrase in user_input.lower():
+        response = read_last_devlog()
         speak(response)
         return response, False
 
@@ -40,6 +48,13 @@ def get_response(user_input):
         response = tell_a_joke()
         speak(response)
         play_sound("/home/colecodes/projects/Pico/audio_files/laugh.wav")
+        return response, False
+    
+    # Putting this off for now, going to move servo control to arduino instead
+    if track_phrase in user_input.lower():
+        response = "Tracking"
+        speak(response)
+        # track function, thread
         return response, False
 
     if current_time_phrase in user_input.lower():
