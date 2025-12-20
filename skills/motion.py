@@ -1,35 +1,27 @@
-from gpiozero import AngularServo
+import serial
 import time
-import os
 
-os.chdir("/home/colecodes/projects/Pico/motor_files") # make auto .lgd files stored in specific folder
+SERIAL_PORT = "/dev/ttyACM0"
+BAUD = 115200
+
+ser = None
+
+def get_serial():
+    global ser
+    if ser is None:
+        ser = serial.Serial(SERIAL_PORT, BAUD, timeout=1)
+        time.sleep(2)
+    return ser
+
+def send_angle(angle: float):
+    ser = get_serial()
+    ser.write(f"{angle}\n".encode())
+    ser.flush()
 
 def dance():
-
-    PIN = 21
-            
-    servo = AngularServo(PIN)
-
     for _ in range(3):
-        servo.angle = 90
+        send_angle(180)
         time.sleep(0.5)
-        servo.angle = -90
+        send_angle(0)
         time.sleep(0.5)
-
-    servo.angle = 0
-    time.sleep(0.5)
-    servo = None
-
-def test():
-    PIN = 21
-    servo = AngularServo(PIN)
-    servo.angle = 45
-    time.sleep(1)
-    servo.angle = 0
-    time.sleep(1)
-    servo.angle = -45
-    time.sleep(1)
-
-if __name__ == '__main__':
-    # dance()
-    test()
+    send_angle(90)

@@ -3,15 +3,13 @@ from picamera2 import Picamera2
 import cv2
 import mediapipe as mp
 import time
-from gpiozero import AngularServo
+from motion import send_angle
 import os; os.chdir("/home/colecodes/projects/Pico/motor_files")
 
 # Webserver init
 server = Flask(__name__)
 
 # Servo init
-servo = AngularServo(21,  min_angle=-90, max_angle=90, min_pulse_width=0.5/1000, max_pulse_width=2.5/1000)
-servo.angle = None
 angle = 0.0
 last_update = 0.0
 
@@ -77,20 +75,21 @@ def track_face(frame_center, box_center):
     now = time.time()
 
     if now - last_update <= 1:
-        servo.angle = None
+        #send_angle(90)
         return
 
     error = box_center - frame_center # distance from center in pixels
 
     if abs(error) < 100:
-        servo.angle = None
+        #send_angle(90)
         return
         
     step = 2.0 # degrees multiplier
     degrees = -(error / frame_center) * step # normalize then convert to degrees
     angle += degrees
     angle = max(-10, min(10, angle)) # clamp to prevent over shooting
-    servo.angle = angle # update angle
+    send_angle(angle) # update angle
+    time.sleep(0.5)
     last_update = now
     
 def frames_generator():

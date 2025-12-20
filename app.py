@@ -1,5 +1,5 @@
 from robot import main
-from skills.facedetection_and_tracking.facetracker import face_tracker
+from skills.facetracker import face_tracker
 import threading as thr
 
 def start_robot():
