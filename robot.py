@@ -1,11 +1,10 @@
 from local_llm.model import model as model
 from skills.weather import get_weather
-from skills.photo import take_picture
+#from skills.photo import take_picture
 from skills.text_to_speech import speak
 from skills.speech_to_text import record_audio
 from skills.speech_to_text import translate_audio_to_text
 from skills.get_current_time import get_time
-from skills.photo import take_picture
 from skills.wakeword.wakeword_runtime import get_prob
 from skills.play_sounds import play_sound
 from skills.joke import tell_a_joke
@@ -83,7 +82,7 @@ def get_response(user_input):
     if picture_phrase in user_input.lower():
         response = "Taking photo"
         speak(response)
-        take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
+        #take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
         return response, False
 
     # Get llm response
