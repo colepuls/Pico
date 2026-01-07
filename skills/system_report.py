@@ -1,4 +1,4 @@
-from gpiozero import CPUTemperature
+from pathlib import Path
 import psutil
 import time
 import os
@@ -6,11 +6,13 @@ import os
 os.chdir("/home/colecodes/projects/Pico/motor_files") # make auto .lgd files stored in specific folder
 
 def get_cpu_temp():
-    cpu = CPUTemperature()
-    return f"CPU Temperature: {((cpu.temperature * 9/5) + 32):.2f}°F"
+    temp_milli = int(Path("/sys/class/thermal/thermal_zone0/temp").read_text().strip())
+    temp_c = temp_milli / 1000
+    temp_f = (temp_c * 9/5) + 32
+    return f"CPU Temperature: {temp_f:.2f}°F"
 
 def get_cpu_usage():
-    return f"CPU Usage: {(psutil.cpu_percent(interval=1)):.2f}%"
+    return f"CPU Usage: {(psutil.cpu_percent(interval=0.1)):.2f}%"
 
 def get_uptime():
     return f"Uptime: {((time.time() - psutil.boot_time()) / 60):.0f} min"
@@ -27,3 +29,6 @@ def get_ram_info():
 
 def get_system_report():
     return f"{get_cpu_temp()}\n\n{get_cpu_usage()}\n\n{get_uptime()}\n\n{get_ram_info()}"
+
+if __name__ == '__main__':
+    print(get_system_report())

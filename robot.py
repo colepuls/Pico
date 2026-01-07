@@ -12,6 +12,8 @@ from skills.system_report import get_system_report
 from skills.bibleverse import get_random_verse
 from skills.motion import dance
 from skills.reportdevlog import read_last_devlog
+from screen import switch_state
+from screen import set_dash_screen
 from colorama import Fore
 import time as t
 
@@ -32,6 +34,13 @@ def get_response(user_input):
     dance_phrase = "dance"
     track_phrase = "track"
     devlog_phrase = "log"
+    switch_state_phrase = "switch state"
+
+    if switch_state_phrase in user_input.lower():
+        response = "Switching state"
+        speak(response)
+        switch_state()
+        return response, False
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
@@ -98,13 +107,15 @@ def main():
         - Awake loop will take user input (voice) and use one of the skill responses or llm response.
     """
 
+    set_dash_screen()
+
     awake = False
 
     while True:
 
         # Asleep loop
-        print(Fore.RED + "Asleep (wake up pico)")
-        print(Fore.RED + "---------------------\n")
+        #print(Fore.RED + "Asleep (wake up pico)")
+        #print(Fore.RED + "---------------------\n")
         while awake == False:
             data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
@@ -113,8 +124,8 @@ def main():
                 break
 
         # Awake loop
-        print(Fore.GREEN + "Awake (listening)")
-        print(Fore.GREEN + "-----------------\n")
+        #print(Fore.GREEN + "Awake (listening)")
+        #print(Fore.GREEN + "-----------------\n")
         while awake == True:
             play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
             _, _, speech_detected = record_audio(stime=2.0) # get user input
@@ -122,19 +133,19 @@ def main():
                 awake = False
                 break
 
-            print(Fore.YELLOW + "User")
-            print(Fore.YELLOW + "----")
+            #print(Fore.YELLOW + "User")
+            #print(Fore.YELLOW + "----")
             user_input = translate_audio_to_text().lower()
-            animate_print(f"{user_input}", 0.02, Fore.YELLOW)
+            #animate_print(f"{user_input}", 0.02, Fore.YELLOW)
 
-            print(Fore.BLUE + "Pico")
-            print(Fore.BLUE + "----")
+            #print(Fore.BLUE + "Pico")
+            #print(Fore.BLUE + "----")
             response, is_llm = get_response(user_input)
             if is_llm == True:
                 awake = False
                 break
             if is_llm == False:
-                animate_print(f"{response}", 0.02, Fore.BLUE)
+                #animate_print(f"{response}", 0.02, Fore.BLUE)
                 awake = False
                 break
 

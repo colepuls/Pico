@@ -7,7 +7,6 @@ import random
 
 def get_random_verse():
     VERSION = bible.Version.KING_JAMES
-
     while True:
         try:
             rand_verse_id = random.randint(1001001, 66022013)
