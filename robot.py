@@ -16,6 +16,7 @@ from screen import switch_state
 from screen import set_dash_screen
 from colorama import Fore
 import time as t
+import threading
 
 def animate_print(text, delay, color):
     for c in text:
@@ -107,7 +108,9 @@ def main():
         - Awake loop will take user input (voice) and use one of the skill responses or llm response.
     """
 
-    set_dash_screen()
+    thread_dash_screen = threading.Thread(target=set_dash_screen, daemon=True)
+    thread_dash_screen.start()
+    # set_dash_screen()
 
     awake = False
 

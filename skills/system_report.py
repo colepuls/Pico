@@ -9,10 +9,10 @@ def get_cpu_temp():
     temp_milli = int(Path("/sys/class/thermal/thermal_zone0/temp").read_text().strip())
     temp_c = temp_milli / 1000
     temp_f = (temp_c * 9/5) + 32
-    return f"CPU Temperature: {temp_f:.2f}°F"
+    return f"{temp_f:.2f}"
 
 def get_cpu_usage():
-    return f"CPU Usage: {(psutil.cpu_percent(interval=0.1)):.2f}%"
+    return f"{(psutil.cpu_percent(interval=0.1)):.2f}"
 
 def get_uptime():
     return f"Uptime: {((time.time() - psutil.boot_time()) / 60):.0f} min"
@@ -25,10 +25,12 @@ def get_ram_info():
     available_mb = vm.available / (1024 ** 3)
     percent = vm.percent
 
-    return f"RAM: {used_mb:.2f} GB / {total_mb:.2f} GB used\n     {available_mb:.2f} GB available\n     {percent:.1f}% used"
+    return f"{used_mb:.2f}"
 
 def get_system_report():
     return f"{get_cpu_temp()}\n\n{get_cpu_usage()}\n\n{get_uptime()}\n\n{get_ram_info()}"
 
 if __name__ == '__main__':
     print(get_system_report())
+
+
