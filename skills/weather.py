@@ -102,17 +102,15 @@ def get_current():
     response = requests.get(url, params={
         "latitude": lat,
         "longitude": lon,
-        "current_weather": True,
-        "daily": "temperature_2m_max,temperature_2m_min,weathercode",
+        "current": "temperature_2m",
+        "temperature_unit": "fahrenheit",
         "timezone": "auto"
     })
     
     data = response.json()
     
     # Temperature data
-    current_temperature = round(data["current_weather"]["temperature"] * 9/5 + 32)
-
-    return current_temperature
+    return round(data["current"]["temperature_2m"])
     
 def get_condition():
     lat, lon = 38.95, -92.33

@@ -40,18 +40,29 @@ def update_data(data, get_data_func, interval):
         time.sleep(interval)
 
 def set_dash_screen():
-    init_current_time = {}
-    #update_data(init_current_time, get_time_skill, 5)
-    thread_time = threading.Thread(target=update_data, args=(init_current_time, get_time_skill, 5), daemon=True)
+    init_time = {"value": None}
+    thread_time = threading.Thread(target=update_data, args=(init_time, get_time_skill, 5), daemon=True)
     thread_time.start()
 
+    init_current_temp = {"value": None}
+    thread_current_temp = threading.Thread(target=update_data, args=(init_current_temp, get_current, 1800), daemon=True)
+    thread_current_temp.start()
+
+    init_cpu_temp = {"value": None}
+    thread_cpu_temp = threading.Thread(target=update_data, args=(init_cpu_temp, get_cpu_temp, 300), daemon=True)
+    thread_cpu_temp.start()
+
     while state is False and not thread_share.dash_stop.is_set():
-        current_time = init_current_time["value"]
-        table = Table()
-        table.add_column("Time", style="cyan")
-        table.add_row(current_time, style="green")
+        current_time = init_time["value"]
+        current_temp = str(init_current_temp["value"])
+        current_cpu_temp = init_cpu_temp["value"]
+        table = Table(title="Dashboard")
+        table.add_column("Skill", style="cyan")
+        table.add_row("Time", current_time)
+        table.add_row("Weather", current_temp)
+        table.add_row("CPU Temp", current_cpu_temp)
         console.print(table)
-        if thread_share.dash_stop.wait(20):
+        if thread_share.dash_stop.wait(10):
             break
         console.clear()
     
@@ -59,20 +70,18 @@ def set_dash_screen():
 
 
 def set_face_screen():
-    table = Table(title="Face")
-    table.add_column("Component", style="red")
-    table.add_column("Value", style="yellow")
-    table.add_column("Component", style="red")
-    table.add_column("Value", style="yellow")
-    table.add_row("CPU", "45%")
-    table.add_row("RAM", "3.2 GB")
-    table.add_row("Temp", "62°C") 
-    table.add_row("CPU", "45%")
-    table.add_row("RAM", "3.2 GB")
-    table.add_row("Temp", "62°C")
-    table.add_row("CPU", "45%")
-    table.add_row("RAM", "3.2 GB")
-    table.add_row("Temp", "62°C")
-    table.add_row("RAM", "3.2 GB")
-    table.add_row("RAM", "3.2 GB")
-    console.print(table)
+    face = """
+                 ________________
+                |                |
+                |      o  o      |
+                |                |
+                |       ^^       |
+                |                |
+                |     ________   |
+                |    |        |  |
+                |    |_____^__|  |
+                |                |
+                 ----------------
+    """
+
+    console.print(face, style="green")
