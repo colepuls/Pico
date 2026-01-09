@@ -17,6 +17,7 @@ from screen import set_dash_screen
 from colorama import Fore
 import time as t
 import threading
+import thread_share
 
 def animate_print(text, delay, color):
     for c in text:
@@ -35,7 +36,7 @@ def get_response(user_input):
     dance_phrase = "dance"
     track_phrase = "track"
     devlog_phrase = "log"
-    switch_state_phrase = "switch state"
+    switch_state_phrase = "switch"
 
     if switch_state_phrase in user_input.lower():
         response = "Switching state"
@@ -108,8 +109,9 @@ def main():
         - Awake loop will take user input (voice) and use one of the skill responses or llm response.
     """
 
-    thread_dash_screen = threading.Thread(target=set_dash_screen, daemon=True)
-    thread_dash_screen.start()
+    thread_share.dash_stop.clear()
+    thread_share.shared_dash = threading.Thread(target=set_dash_screen, daemon=True)
+    thread_share.shared_dash.start()
     # set_dash_screen()
 
     awake = False

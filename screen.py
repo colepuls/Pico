@@ -10,6 +10,7 @@ from skills.bibleverse import get_random_verse
 from skills.get_current_time import get_time_skill, get_date_skill
 from skills.weather import get_condition, get_current, get_high, get_low
 from skills.system_report import get_cpu_temp, get_cpu_usage, get_ram_info
+import thread_share
 
 # False = dashboard, True = face
 state = False # default to dash on boot
@@ -17,11 +18,9 @@ console = Console()
 
 def switch_state():
     global state
-    thread_dash_screen = threading.Thread(target=set_dash_screen, daemon=True)
-
     if state == False:
         state = True
-        thread_dash_screen.stop()
+        thread_share.dash_stop.set()
         console.clear()
         set_face_screen()
         return
@@ -29,7 +28,9 @@ def switch_state():
         state = False
         console.clear()
         #set_dash_screen()
-        thread_dash_screen.start()
+        thread_share.dash_stop.clear()
+        thread_share.shared_dash = threading.Thread(target=set_dash_screen, daemon=True)
+        thread_share.shared_dash.start()
         return
     
 
@@ -40,20 +41,20 @@ def update_data(data, get_data_func, interval):
 
 def set_dash_screen():
     init_current_time = {}
+    #update_data(init_current_time, get_time_skill, 5)
+    thread_time = threading.Thread(target=update_data, args=(init_current_time, get_time_skill, 5), daemon=True)
+    thread_time.start()
 
-    while state is False:
-        #update_data(init_current_time, get_time_skill, 5)
-        thread_time = threading.Thread(target=update_data, args=(init_current_time, get_time_skill, 5), daemon=True)
-        thread_time.start()
+    while state is False and not thread_share.dash_stop.is_set():
         current_time = init_current_time["value"]
         table = Table()
         table.add_column("Time", style="cyan")
         table.add_row(current_time, style="green")
         console.print(table)
-        time.sleep(20)
+        if thread_share.dash_stop.wait(20):
+            break
         console.clear()
     
-    thread_time.stop()
     return
 
 
