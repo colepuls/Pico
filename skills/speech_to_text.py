@@ -113,3 +113,11 @@ def translate_audio_to_text():
     recognizer.reset(stream)
 
     return text
+
+if __name__ == '__main__':
+    import sounddevice as sd
+    for i,d in enumerate(sd.query_devices()):
+        if d["max_input_channels"] > 0:
+            print(i, d["name"], "default_sr:", d["default_samplerate"])
+
+

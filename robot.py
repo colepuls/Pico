@@ -1,6 +1,6 @@
 from local_llm.model import model as model
 from skills.weather import get_weather
-#from skills.photo import take_picture
+from skills.photo import take_picture
 from skills.text_to_speech import speak
 from skills.speech_to_text import record_audio
 from skills.speech_to_text import translate_audio_to_text
@@ -12,12 +12,8 @@ from skills.system_report import get_system_report
 from skills.bibleverse import get_random_verse
 from skills.motion import dance
 from skills.reportdevlog import read_last_devlog
-from screen import switch_state
-from screen import set_dash_screen
 from colorama import Fore
 import time as t
-import threading
-import thread_share
 
 def animate_print(text, delay, color):
     for c in text:
@@ -36,13 +32,6 @@ def get_response(user_input):
     dance_phrase = "dance"
     track_phrase = "track"
     devlog_phrase = "log"
-    switch_state_phrase = "switch"
-
-    if switch_state_phrase in user_input.lower():
-        response = "Switching state"
-        speak(response)
-        switch_state()
-        return response, False
 
     if weather_phrase in user_input.lower():
         response = get_weather(38.95, -92.33) # Columbia, MO
@@ -93,7 +82,7 @@ def get_response(user_input):
     if picture_phrase in user_input.lower():
         response = "Taking photo"
         speak(response)
-        #take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
+        take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
         return response, False
 
     # Get llm response
@@ -109,18 +98,12 @@ def main():
         - Awake loop will take user input (voice) and use one of the skill responses or llm response.
     """
 
-    thread_share.dash_stop.clear()
-    thread_share.shared_dash = threading.Thread(target=set_dash_screen, daemon=True)
-    thread_share.shared_dash.start()
-    # set_dash_screen()
-
     awake = False
 
     while True:
 
         # Asleep loop
-        #print(Fore.RED + "Asleep (wake up pico)")
-        #print(Fore.RED + "---------------------\n")
+        print(Fore.RED + "Asleep (wake up pico)\n")
         while awake == False:
             data, sr, _ = record_audio(stime=0.1)
             prob_wakeword = get_prob(data, sr)
@@ -129,8 +112,7 @@ def main():
                 break
 
         # Awake loop
-        #print(Fore.GREEN + "Awake (listening)")
-        #print(Fore.GREEN + "-----------------\n")
+        print(Fore.GREEN + "Awake (listening)\n")
         while awake == True:
             play_sound("/home/colecodes/projects/Pico/audio_files/pico-chime2.wav") # play wake chime
             _, _, speech_detected = record_audio(stime=2.0) # get user input
@@ -138,40 +120,17 @@ def main():
                 awake = False
                 break
 
-            #print(Fore.YELLOW + "User")
-            #print(Fore.YELLOW + "----")
             user_input = translate_audio_to_text().lower()
-            #animate_print(f"{user_input}", 0.02, Fore.YELLOW)
+            animate_print(f"{user_input}", 0.02, Fore.YELLOW)
 
-            #print(Fore.BLUE + "Pico")
-            #print(Fore.BLUE + "----")
             response, is_llm = get_response(user_input)
             if is_llm == True:
                 awake = False
                 break
             if is_llm == False:
-                #animate_print(f"{response}", 0.02, Fore.BLUE)
+                animate_print(f"{response}", 0.02, Fore.BLUE)
                 awake = False
                 break
 
 if __name__ == '__main__':
     main()
-
-# TODO:
-"""
-- Dance
-- Wake animation (already have chime maybe add some visual and motor movement)
-- Gesture recognition (wake when waved at)
-- Face detection, have pico recognize different people
-- Add to where when user does not say anything for 3 minitues pico's visual display goes to sleep
-- Add proper motion control
-- 3d print parts
-- Create visual screen
-- Assemble all the parts
-- IDLE behaviors
-- Github notifier "You have 2 new commits pushed to 'repo'."
-- Auto-greeting (when face detected)
-- Follow movement (turn to look at person if moving around room)
-- Fix camera colors
-- Add model visual (create website showcasing Pico)
-"""

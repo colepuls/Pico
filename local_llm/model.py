@@ -42,9 +42,9 @@ def model(user_input):
     response = ""
     for word in ollama.chat(model=MODEL, messages=messages, stream=True):
         content = word["message"]["content"]   
-        #print(f"{Fore.BLUE}{content}", end="", flush=True)
+        print(f"{Fore.BLUE}{content}", end="", flush=True)
         response += content
-    #print("\n")
+    print("\n")
     
     response_message = {'role': 'assistant', 'content': response}
 

@@ -25,3 +25,6 @@ def dance():
         send_angle(0)
         time.sleep(0.5)
     send_angle(90)
+
+if __name__ == '__main__':
+    dance()
