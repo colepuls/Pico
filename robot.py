@@ -72,7 +72,7 @@ def get_response(user_input):
     if picture_phrase in user_input.lower():
         response = "Taking photo"
         speak(response)
-        take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
+        take_picture('/home/colecodes/projects/Pico/images/recent_photo.jpg')
         return response, False
 
     # Get llm response

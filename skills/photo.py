@@ -1,7 +1,7 @@
 from picamera2 import Picamera2
 from libcamera import Transform
-from PIL import Image
 import time
+from PIL import Image
 
 def take_picture(path):
     """
@@ -24,8 +24,15 @@ def take_picture(path):
     except Exception as e:
         print("Camera error:", e)
 
+def convert_ascii(path):
+    chars = " .:-=+*#%@"
+    img = Image.open(path).convert("L").resize((80, 40))
+    for i, p in enumerate(img.getdata()):
+        print(chars[p * (len(chars)-1) // 255], end="\n" if (i+1) % 80 == 0 else "")
+
 def main():
-    take_picture('/home/colecodes/projects/Pico/images/photo.jpg')
+    # take_picture('/home/colecodes/projects/Pico/images/recent_photo.jpg')
+    convert_ascii('/home/colecodes/projects/Pico/images/recent_photo.jpg')
 
 if __name__ == '__main__':
     main()
