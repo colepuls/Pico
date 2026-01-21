@@ -3,16 +3,18 @@ import sounddevice as sd
 import soundfile as sf
 import numpy as np
 import sherpa_onnx
+from skills.samplerate_conversion import resample
 
 SHERPA_MODEL_DIR = "/home/colecodes/projects/Pico/sherpa-onnx-stt"
 sherpa_recognizer = None # keep a single recognizer in memory so the model only loads once
+# default_device = sd.default.device = 'USB PnP Sound Device'
 
 def record_audio(stime):
     """
     This function records user input and stores into a .wav file.
     """
 
-    samplerate = 16000
+    samplerate = 48000
     threshold = 0.3
     silence_time = stime
     block_size = 1024
@@ -35,8 +37,10 @@ def record_audio(stime):
                 speech_detected = True
         
     data = np.concatenate(audio, axis=0) # combine all audio chunks
+    # resample here ...
+    data_16sr = resample(data, samplerate, 16000)
     sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
-    return data, samplerate, speech_detected
+    return data_16sr, 16000, speech_detected
 
 def create_sherpa_recognizer():
     """

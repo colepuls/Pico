@@ -1,6 +1,6 @@
-#from picamera2 import Picamera2
-#from libcamera import Transform
-import cv2
+from picamera2 import Picamera2
+from libcamera import Transform
+from PIL import Image
 import time
 
 def take_picture(path):
@@ -10,25 +10,16 @@ def take_picture(path):
 
     try:
         # Initialize camera
-        #cam = Picamera2()
-        #cam.configure(cam.create_still_configuration(transform=Transform(hflip=True, vflip=False)))
-        cam = cv2.VideoCapture(0, cv2.CAP_V4L2)
+        cam = Picamera2()
+        cam.configure(cam.create_still_configuration(transform=Transform(hflip=True, vflip=False)))
 
         # Take photo
-        #cam.start()
+        cam.start()
         time.sleep(1)
-        ok, frame = cam.read()
-        #cam.capture_file(path)
-        #cam.stop()
-
-        if ok:
-            frame = cv2.flip(frame, 1)
-            cv2.imwrite(path, frame)
-        
+        cam.capture_file(path)
+        cam.stop()
         # Reset
-        #cam.close()
-        cam.release()
-        cam = None
+        cam.close()
             
     except Exception as e:
         print("Camera error:", e)
