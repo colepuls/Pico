@@ -21,5 +21,5 @@ def get_random_verse():
 
     return f'{verse_info[0].title} {verse_info[1]}:{verse_info[2]} "{verse_text}"'
 
-def run():
+def run_verse():
     return get_random_verse()

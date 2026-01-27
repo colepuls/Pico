@@ -1,6 +1,6 @@
 import requests
 
-def run(lat=38.95, lon=-92.33):
+def run_weather(lat=38.95, lon=-92.33):
     """
     This function simply gets current weather condiotions using requests from a free weather api.
     """

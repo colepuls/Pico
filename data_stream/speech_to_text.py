@@ -13,9 +13,9 @@ def record_audio(sleep_delay):
     """
     This function records user input and stores into a .wav file.
     """
-
     samplerate = 48000
-    threshold = 0.3
+    #threshold = 0.3
+    threshold = 0.02
     silence_time = sleep_delay
     block_size = 1024
     silence_time_tracker = 0
@@ -26,7 +26,8 @@ def record_audio(sleep_delay):
     with sd.InputStream(samplerate=samplerate, channels=1) as stream:
         while True:
             block = stream.read(block_size)[0]
-            volume = np.linalg.norm(block)
+            #volume = np.linalg.norm(block)
+            volume = float(np.sqrt((block**2).mean()))
             audio.append(block)
             if volume < threshold:
                 silence_time_tracker += block_size / samplerate
@@ -117,5 +118,3 @@ def translate_audio_to_text():
     recognizer.reset(stream)
 
     return text
-
-
