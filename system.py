@@ -23,13 +23,13 @@ PHOTO_PATH = "/home/cole/Pico/images/photo.jpg"
 
 # Skill router
 SKILLS = {
-    "verse": verse.run,
+    "verse": verse.run_verse,
     "date": date_time.run_date,
     "time": date_time.run_time,
-    "joke": joke.run,
+    "joke": joke.run_joke,
     "dance": movement.run_dance,
-    "report": report.run,
-    "weather": weather.run
+    "report": report.run_system_report,
+    "weather": weather.run_weather
 }
 
 class State(Enum):
@@ -60,9 +60,10 @@ def handle_input(user_input):
     words = set(user_input.lower().split()) # o(1)
     for phrase, skill in SKILLS.items():
         if phrase in words:
+            
             text = skill()
             
-            if phrase == "joke": # plays sound after response said
+            if phrase == "joke": # plays sound after response said, returns string, sound path
                 return text, LAUGH_PATH
             
             return text, None

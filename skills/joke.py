@@ -1,6 +1,6 @@
 import random
 
-def run():
+def run_joke():
     
     jokes = [
         "I told my computer I needed a break… now it won't stop sending me Kit-Kat ads.",
@@ -60,6 +60,4 @@ def run():
         "Even Paul wrote letters when he could not text.",
     ]
     
-    random_joke = random.choice(jokes)
-
-    return random_joke
+    return random.choice(jokes)
