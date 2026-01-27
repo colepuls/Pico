@@ -2,7 +2,6 @@ from pathlib import Path
 import psutil
 import os
 
-os.chdir("/home/colecodes/projects/Pico/motor_files") # make auto .lgd files stored in specific folder
 
 def get_cpu_temp():
     temp_milli = int(Path("/sys/class/thermal/thermal_zone0/temp").read_text().strip())
@@ -21,7 +20,7 @@ def get_ram_info():
 def get_system_report():
     return f"{get_ram_info()}\n{get_cpu_temp()}\n{get_cpu_usage()}"
 
-if __name__ == '__main__':
-    print(get_system_report())
+def run():
+    return get_system_report()
 
 

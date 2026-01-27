@@ -21,5 +21,5 @@ def get_random_verse():
 
     return f'{verse_info[0].title} {verse_info[1]}:{verse_info[2]} "{verse_text}"'
 
-if __name__ == "__main__":
-   print(get_random_verse())
+def run():
+    return get_random_verse()
