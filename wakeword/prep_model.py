@@ -1,6 +1,6 @@
 import torch, torch.nn.functional as F, torchaudio
 from torchaudio.transforms import MelSpectrogram, AmplitudeToDB
-from skills.wakeword.model import WakewordRNN
+from wakeword.model import WakewordRNN
 
 SAMPLE_RATE = 16000
 TARGET_LEN = 16000
@@ -8,7 +8,7 @@ TARGET_LEN = 16000
 # Load model
 device = torch.device("cpu")
 model = WakewordRNN().to(device)
-model.load_state_dict(torch.load("/home/colecodes/projects/Pico/skills/wakeword/wakeword_model.pth", map_location=device))
+model.load_state_dict(torch.load("/home/cole/Pico/wakeword/wakeword_model.pth", map_location=device))
 model.eval()
 
 # Audio transforms
@@ -16,19 +16,13 @@ mel = MelSpectrogram(sample_rate=SAMPLE_RATE, n_fft=400, hop_length=160, n_mels=
 db  = AmplitudeToDB()
 
 def to_mono(x):
-    """
-    This function converts stereo audio to mono by averaging the two channels.
-    - Returns a 1D float32 tensor.
-    """
+    # Converts from stereo to mono
     if x.ndim == 2:
         x = x.mean(axis=1)
     return torch.tensor(x, dtype=torch.float32)
 
 def prep_waveform(x, sr):
-    """
-    This function resamples the wavefrom to the target sample rate
-    and ensures it has a fixed length by trimming or padding.
-    """
+    # Resample audio to sr
     if sr != SAMPLE_RATE:
         x = torchaudio.functional.resample(x, sr, SAMPLE_RATE)
     if x.numel() > TARGET_LEN:
@@ -38,9 +32,7 @@ def prep_waveform(x, sr):
     return x
 
 def get_prob(np_audio, sr):
-    """
-    This function gets the probability the wakeword 'Pico' was said.
-    """
+    # get prob of wakeword 'pico'
     x = to_mono(np_audio)
     x = prep_waveform(x, sr)
     _mel = mel(x)

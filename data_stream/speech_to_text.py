@@ -3,20 +3,20 @@ import sounddevice as sd
 import soundfile as sf
 import numpy as np
 import sherpa_onnx
-from skills.samplerate_conversion import resample
+from data_stream.samplerate_conversion import resample
 
-SHERPA_MODEL_DIR = "/home/colecodes/projects/Pico/sherpa-onnx-stt"
+SHERPA_MODEL_DIR = "/home/cole/Pico/sherpa-onnx-stt"
 sherpa_recognizer = None # keep a single recognizer in memory so the model only loads once
 # default_device = sd.default.device = 'USB PnP Sound Device'
 
-def record_audio(stime):
+def record_audio(sleep_delay):
     """
     This function records user input and stores into a .wav file.
     """
 
     samplerate = 48000
     threshold = 0.3
-    silence_time = stime
+    silence_time = sleep_delay
     block_size = 1024
     silence_time_tracker = 0
     audio = []
@@ -26,7 +26,7 @@ def record_audio(stime):
     with sd.InputStream(samplerate=samplerate, channels=1) as stream:
         while True:
             block = stream.read(block_size)[0]
-            volume = np.linalg.norm(block) 
+            volume = np.linalg.norm(block)
             audio.append(block)
             if volume < threshold:
                 silence_time_tracker += block_size / samplerate
@@ -39,7 +39,7 @@ def record_audio(stime):
     data = np.concatenate(audio, axis=0) # combine all audio chunks
     # resample here ...
     data_16sr = resample(data, samplerate, 16000)
-    sf.write("/home/colecodes/projects/Pico/audio_files/audio.wav", data, samplerate)
+    sf.write("/home/cole/Pico/audio_files/audio.wav", data, samplerate)
     return data_16sr, 16000, speech_detected
 
 def create_sherpa_recognizer():
@@ -89,7 +89,7 @@ def get_sherpa_recognizer():
 
 def translate_audio_to_text():
 
-    audio_path="/home/colecodes/projects/Pico/audio_files/audio.wav"
+    audio_path="/home/cole/Pico/audio_files/audio.wav"
 
     recognizer = get_sherpa_recognizer()
 
@@ -117,11 +117,5 @@ def translate_audio_to_text():
     recognizer.reset(stream)
 
     return text
-
-if __name__ == '__main__':
-    import sounddevice as sd
-    for i,d in enumerate(sd.query_devices()):
-        if d["max_input_channels"] > 0:
-            print(i, d["name"], "default_sr:", d["default_samplerate"])
 
 

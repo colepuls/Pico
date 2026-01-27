@@ -1,6 +1,7 @@
 import random
 
-def tell_a_joke():
+def run():
+    
     jokes = [
         "I told my computer I needed a break… now it won't stop sending me Kit-Kat ads.",
         "Why did the scarecrow get promoted? Because he was outstanding in his field.",
@@ -24,6 +25,39 @@ def tell_a_joke():
         "I asked Google for a joke about unemployment, it didn't work.",
         "I have a step ladder. I never knew my real ladder.",
         "I tried to start a career as a comedian, but my parents told me I wasn't allowed to joke about them anymore.",
+        "I told my computer I needed space, and it deleted my files.",
+        "I tried to be normal once, worst two minutes of my life.",
+        "I started a procrastinators club, we have not met yet.",
+        "I only know 25 letters of the alphabet, I do not know y.",
+        "I am reading a book about anti gravity, it is impossible to put down.",
+        "I named my hard drive homework, now every crash is technically true.",
+        "I tried to catch fog yesterday, mist.",
+        "My calendar and I are in a toxic relationship, it keeps reminding me of things.",
+        "I made a belt out of watches, total waist of time.",
+        "I told my code to behave, and it threw an exception.",
+        "I opened a bakery for programmers, everything is byte sized.",
+        "My math teacher called me average, that was mean.",
+        "I asked the gym how flexible I needed to be, they said how about never.",
+        "My bed and I are perfect for each other, we just cannot get out of the relationship.",
+        "Money talks, but mine just says goodbye.",
+        "I tried to organize a hide and seek tournament, but good players are hard to find.",
+        "I told my Wi Fi I loved it, now it needs space.",
+        "I bought a stress ball, now I am just stressed about losing it.",
+        "I tried to be productive today, but my chair said sit down, and we talked about it.",
+        "I wrote a joke about paper, but it was tearable.",
+        "Jesus saves, but I still back up my files.",
+        "Moses was the first guy to download data from the cloud.",
+        "I prayed for patience, and got stuck behind a slow driver.",
+        "Noah did not just build a boat, he ran the first animal carpool.",
+        "Jonah really tried to avoid his calling, but God said whale see about that.",
+        "I tried fasting for spiritual growth, and just grew closer to the fridge.",
+        "Adam had one rule, and still speed ran failure.",
+        "David beat Goliath with one rock, meanwhile I need five alarms to wake up.",
+        "God answers prayers, sometimes the answer is drink water and go to sleep.",
+        "Church parking lots fill up faster than the front rows.",
+        "I asked for strength, and God scheduled leg day.",
+        "Prayer is just customer support, but with better hold music.",
+        "Even Paul wrote letters when he could not text.",
     ]
     
     random_joke = random.choice(jokes)
