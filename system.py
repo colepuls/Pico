@@ -3,10 +3,9 @@ import data_stream.audio_out as audio_out
 import data_stream.speech_to_text as voice_in
 from data_stream.text_to_speech import convert_text_to_audio
 import wakeword.prep_model as wakeword_model
-import skills.bibleverse as verse
+import skills.verse as verse
 import skills.date_time as date_time
 import skills.joke as joke
-import skills.movement as movement
 import skills.system_report as report
 import skills.weather as weather
 from enum import Enum
@@ -27,16 +26,18 @@ SKILLS = {
     "date": date_time.run_date,
     "time": date_time.run_time,
     "joke": joke.run_joke,
-    "dance": movement.run_dance,
-    "report": report.run_system_report,
+    "report": report.run_report,
     "weather": weather.run_weather
 }
+
 
 class State(Enum):
     SLEEPING = 0
     AWAKE = 1
 
+
 class Robot:
+    
     def __init__(self, state: State):
         self.name = "Pico"
         self.state = state
@@ -110,7 +111,7 @@ def run_system():
             pico_output, after_sound = handle_input(user_input)
             convert_text_to_audio(pico_output)
             audio_out.play_audio(PICO_VOICE_PATH)
-            if after_sound:
+            if after_sound: # for joke skill
                 audio_out.play_audio(after_sound)
             printf(pico_output, Fore.BLUE)
             pico.sleep()

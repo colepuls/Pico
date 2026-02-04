@@ -6,13 +6,10 @@ import sherpa_onnx
 from data_stream.samplerate_conversion import resample
 
 SHERPA_MODEL_DIR = "/home/cole/Pico/sherpa-onnx-stt"
-sherpa_recognizer = None # keep a single recognizer in memory so the model only loads once
+sherpa_recognizer = None # keep single recognizer for single load
 # default_device = sd.default.device = 'USB PnP Sound Device'
 
 def record_audio(sleep_delay):
-    """
-    This function records user input and stores into a .wav file.
-    """
     samplerate = 48000
     #threshold = 0.3
     threshold = 0.02
@@ -38,15 +35,14 @@ def record_audio(sleep_delay):
                 speech_detected = True
         
     data = np.concatenate(audio, axis=0) # combine all audio chunks
-    # resample here ...
+    # resample:
     data_16sr = resample(data, samplerate, 16000)
     sf.write("/home/cole/Pico/audio_files/audio.wav", data, samplerate)
     return data_16sr, 16000, speech_detected
 
+
+# STT MODEL SETUP -----
 def create_sherpa_recognizer():
-    """
-    Create a sherpa-onnx OnlineRecognizer for the Zipformer transducer model.
-    """
 
     encoder = os.path.join(
         SHERPA_MODEL_DIR,
@@ -86,35 +82,30 @@ def get_sherpa_recognizer():
     if sherpa_recognizer is None:
         sherpa_recognizer = create_sherpa_recognizer()
     return sherpa_recognizer
+# -----
 
 
+# STT
 def translate_audio_to_text():
+    audio_path="/home/cole/Pico/audio_files/audio.wav" # user audio path
+    recognizer = get_sherpa_recognizer() # get model
+    samples, sr = sf.read(audio_path, dtype="float32") # read audio
 
-    audio_path="/home/cole/Pico/audio_files/audio.wav"
-
-    recognizer = get_sherpa_recognizer()
-
-    # Load waveform
-    samples, sr = sf.read(audio_path, dtype="float32")
-
-    # If stereo, average to mono
+    # if stereo, average to mono
     if samples.ndim > 1:
         samples = samples.mean(axis=1)
 
-    # Create new stream
     stream = recognizer.create_stream()
-
-    # Resample if needed
+    # resample if needed
     stream.accept_waveform(sr, samples)
 
-    # Process
+    # process
     while recognizer.is_ready(stream):
         recognizer.decode_stream(stream)
 
-    # Result
+    # result
     text = recognizer.get_result(stream).strip()
-
-    # Reset stream to reuse
+    # reset
     recognizer.reset(stream)
 
     return text

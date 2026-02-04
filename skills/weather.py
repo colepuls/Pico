@@ -1,9 +1,7 @@
 import requests
 
-def run_weather(lat=38.95, lon=-92.33):
-    """
-    This function simply gets current weather condiotions using requests from a free weather api.
-    """
+def run_weather(lat=38.95, lon=-92.33): # pico's location
+    # uses weather api, only online feature of pico
 
     url = "https://api.open-meteo.com/v1/forecast"
     

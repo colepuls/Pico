@@ -4,6 +4,7 @@ import psutil
 
 def get_cpu_temp():
     temp_milli = int(Path("/sys/class/thermal/thermal_zone0/temp").read_text().strip())
+    # convert temp
     temp_c = temp_milli / 1000
     temp_f = (temp_c * 9/5) + 32
     return f"CPU temp is {temp_f:.1f} degrees"
@@ -19,7 +20,6 @@ def get_ram_info():
     return f"{used_mb:.2f} GB of RAM used"
 
 
-def run_system_report():
+# all together
+def run_report():
     return f"{get_ram_info()}\n{get_cpu_temp()}\n{get_cpu_usage()}"
-
-
